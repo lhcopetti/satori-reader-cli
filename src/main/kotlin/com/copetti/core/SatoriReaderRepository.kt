@@ -9,5 +9,9 @@ data class SatoriReaderRepositoryRequest(
 
 interface SatoriReaderRepository {
 
+    fun login(request: SatoriReaderRepositoryRequest)
+
     fun fetchAllSeries(request: SatoriReaderRepositoryRequest): List<SatoriReaderSeries>
+
+    fun resetProgress(episodes: List<SatoriReaderSeries>)
 }

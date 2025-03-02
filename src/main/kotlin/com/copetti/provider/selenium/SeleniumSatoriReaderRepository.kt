@@ -10,15 +10,25 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.WindowType
-import java.time.Duration
 
 class SeleniumSatoriReaderRepository(
     private val driver: WebDriver
 ) : SatoriReaderRepository {
-    override fun fetchAllSeries(request: SatoriReaderRepositoryRequest): List<SatoriReaderSeries> {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
+    override fun login(request: SatoriReaderRepositoryRequest) {
         openSatoriReaderWebSite(driver)
-        login(request, driver)
+        val signIn = driver.findElement(By.xpath("//a[@href=\"/signin\"]"))
+        signIn.click()
+
+        val usernameInput = driver.findElement(By.id("username"))
+        val passwordInput = driver.findElement(By.id("password"))
+        val signInButton = driver.findElement(By.id("sign-in-button"))
+
+        usernameInput.sendKeys(request.login)
+        passwordInput.sendKeys(request.password)
+        signInButton.click()
+    }
+
+    override fun fetchAllSeries(request: SatoriReaderRepositoryRequest): List<SatoriReaderSeries> {
 
         val seriesTiles = driver.findElement(By.className("series-tiles"))
         val allSeries = seriesTiles.findElements(By.tagName("a"))
@@ -39,6 +49,40 @@ class SeleniumSatoriReaderRepository(
         }
 
         return series
+    }
+
+    override fun resetProgress(allSeries: List<SatoriReaderSeries>) {
+
+        val startedEditions = allSeries.stream()
+            .flatMap { series -> series.episodes.stream() }
+            .flatMap { episode -> episode.editions.stream() }
+            .filter { edition -> edition.status != SatoriReaderStatus.UNREAD }
+            .toList()
+
+        val groupedEditions = inGroupsOf(startedEditions, 10)
+
+        groupedEditions.forEach { editions ->
+            editions.forEach { edition -> openLinkInNewTab(edition.url) }
+            editions.forEach {
+                driver.findElement(By.id("sidebar-article-status-unread")).click()
+                Thread.sleep(250)
+                closeTab()
+            }
+        }
+    }
+
+    private fun inGroupsOf(elements: List<SatoriReaderEdition>, groupSize: Int): List<List<SatoriReaderEdition>> {
+
+        val result = mutableListOf<List<SatoriReaderEdition>>()
+        var remainingElements = elements
+
+        while (remainingElements.isNotEmpty()) {
+            val newBatch = remainingElements.take(groupSize)
+            remainingElements = remainingElements.drop(groupSize)
+            result.add(newBatch)
+        }
+
+        return result
     }
 
     private fun getSeriesTitle(): String {
@@ -72,33 +116,20 @@ class SeleniumSatoriReaderRepository(
     }
 
 
-    private fun openLinkInNewTab(episodeUrl: String) {
-        driver.switchTo().newWindow(WindowType.TAB)
-        driver.get("${SATORI_BASE_URL}${episodeUrl}")
-    }
-
     private fun openLinkInNewTab(linkWebElement: WebElement) {
         val href = linkWebElement.getDomAttribute("href")
         driver.switchTo().newWindow(WindowType.TAB)
         driver.get("${SATORI_BASE_URL}${href}")
     }
 
+    private fun openLinkInNewTab(episodeUrl: String) {
+        driver.switchTo().newWindow(WindowType.TAB)
+        driver.get("${SATORI_BASE_URL}${episodeUrl}")
+    }
+
     private fun closeTab() {
         driver.close()
         driver.switchTo().window(driver.windowHandles.last())
-    }
-
-    private fun login(request: SatoriReaderRepositoryRequest, driver: WebDriver) {
-        val signIn = driver.findElement(By.xpath("//a[@href=\"/signin\"]"))
-        signIn.click()
-
-        val usernameInput = driver.findElement(By.id("username"))
-        val passwordInput = driver.findElement(By.id("password"))
-        val signInButton = driver.findElement(By.id("sign-in-button"))
-
-        usernameInput.sendKeys(request.login)
-        passwordInput.sendKeys(request.password)
-        signInButton.click()
     }
 
     private fun openSatoriReaderWebSite(driver: WebDriver) {
