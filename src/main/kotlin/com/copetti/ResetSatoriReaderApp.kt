@@ -1,12 +1,14 @@
 package com.copetti
 
+import com.copetti.core.SatoriReaderRepositoryRequest
+import com.copetti.model.SatoriReaderStatus
+import com.copetti.provider.selenium.SeleniumSatoriReaderRepository
 import org.openqa.selenium.By
 import org.openqa.selenium.PageLoadStrategy
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.WindowType
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import java.time.Duration
 
 
 class ResetSatoriReaderApp(
@@ -30,71 +32,28 @@ class ResetSatoriReaderApp(
 
     private fun resetHistory(properties: AppProperties, driver: ChromeDriver) {
         val baseUrl = "https://satorireader.com"
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
-        openSatoriReaderWebSite(driver)
-        login(driver, properties)
 
-        val seriesTiles = driver.findElement(By.className("series-tiles"))
-        val allSeries = seriesTiles.findElements(By.tagName("a"))
-//        allSeries = allSeries.drop(2)
+        val repository = SeleniumSatoriReaderRepository(driver)
+        val request = SatoriReaderRepositoryRequest(
+            login = properties.getUsername()!!,
+            password = properties.getPassword()!!
+        )
+
+        val allSeries = repository.fetchAllSeries(request)
 
         for (series in allSeries) {
 
-            openLinkInNewTab(baseUrl, driver, series)
-
-            val allEpisodes = driver.findElements(By.className("series-detail-grid-item"))
-
-
-            val pendingEpisodeLinks = allEpisodes.stream()
-                .flatMap { episode ->
-                    val editionsTable = episode.findElement(By.tagName("table"))
-                    val allRowsWithHeader = editionsTable.findElements(By.tagName("tr"))
-                    allRowsWithHeader.drop(1).stream()
-                }
-                .filter { row ->
-                    val columns = row.findElements(By.tagName("td"))
-                    val status = columns[1].text
-                    status != "Unread"
-                }
-                .map { row ->
-                    val columns = row.findElements(By.tagName("td"))
-                    columns[0].findElement(By.tagName("a")).getDomAttribute("href")
-                }
+            val startedEditions = series.episodes.stream()
+                .flatMap { episode -> episode.editions.stream() }
+                .filter { edition -> edition.status != SatoriReaderStatus.UNREAD }
                 .toList()
 
-            for(episode in pendingEpisodeLinks) {
-                openLinkInNewTab(baseUrl, driver, episode)
-            }
-
-            for(episode in pendingEpisodeLinks) {
+            startedEditions.forEach { edition ->  openLinkInNewTab(baseUrl, driver, edition.url) }
+            startedEditions.forEach {
                 driver.findElement(By.id("sidebar-article-status-unread")).click()
+                Thread.sleep(250)
                 closeTab(driver)
             }
-
-//            for (episode in allEpisodes) {
-//
-//                val editionsTable = episode.findElement(By.tagName("table"))
-//                val allRowsWithHeader = editionsTable.findElements(By.tagName("tr"))
-//                val rows = allRowsWithHeader.drop(1)
-//
-//
-//                for (row in rows) {
-//                    val columns = row.findElements(By.tagName("td"))
-//
-//                    val status = columns[1].text
-//
-//                    if (status == "Unread")
-//                        continue;
-//
-//                    val edition = columns[0].findElement(By.tagName("a"))
-//                    openLinkInNewTab(baseUrl, driver, edition)
-//
-//                    closeTab(driver)
-//                }
-//
-//            }
-
-            closeTab(driver)
         }
 
     }
