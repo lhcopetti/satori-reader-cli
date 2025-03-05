@@ -12,25 +12,24 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.WindowType
 
 class SeleniumSatoriReaderRepository(
-    private val driver: WebDriver
+    private val webDriverConfiguration: SeleniumWebDriverConfiguration
 ) : SatoriReaderRepository {
     override fun login(request: SatoriReaderRepositoryRequest) {
-        openSatoriReaderWebSite(driver)
-        val signIn = driver.findElement(By.xpath("//a[@href=\"/signin\"]"))
+        openSatoriReaderWebSite(driver())
+        val signIn = driver().findElement(By.xpath("//a[@href=\"/signin\"]"))
         signIn.click()
 
-        val usernameInput = driver.findElement(By.id("username"))
-        val passwordInput = driver.findElement(By.id("password"))
-        val signInButton = driver.findElement(By.id("sign-in-button"))
+        val usernameInput = driver().findElement(By.id("username"))
+        val passwordInput = driver().findElement(By.id("password"))
+        val signInButton = driver().findElement(By.id("sign-in-button"))
 
         usernameInput.sendKeys(request.login)
         passwordInput.sendKeys(request.password)
         signInButton.click()
     }
 
-    override fun fetchAllSeries(request: SatoriReaderRepositoryRequest): List<SatoriReaderSeries> {
-
-        val seriesTiles = driver.findElement(By.className("series-tiles"))
+    override fun fetchAllSeries(): List<SatoriReaderSeries> {
+        val seriesTiles = driver().findElement(By.className("series-tiles"))
         val allSeries = seriesTiles.findElements(By.tagName("a"))
         val series = mutableListOf<SatoriReaderSeries>()
 
@@ -51,9 +50,9 @@ class SeleniumSatoriReaderRepository(
         return series
     }
 
-    override fun resetProgress(allSeries: List<SatoriReaderSeries>) {
+    override fun resetReadingProgress() {
 
-        val startedEditions = allSeries.stream()
+        val startedEditions = fetchAllSeries().stream()
             .flatMap { series -> series.episodes.stream() }
             .flatMap { episode -> episode.editions.stream() }
             .filter { edition -> edition.status != SatoriReaderStatus.UNREAD }
@@ -64,7 +63,7 @@ class SeleniumSatoriReaderRepository(
         groupedEditions.forEach { editions ->
             editions.forEach { edition -> openLinkInNewTab(edition.url) }
             editions.forEach {
-                driver.findElement(By.id("sidebar-article-status-unread")).click()
+                webDriverConfiguration.getDriver().findElement(By.id("sidebar-article-status-unread")).click()
                 Thread.sleep(250)
                 closeTab()
             }
@@ -86,14 +85,14 @@ class SeleniumSatoriReaderRepository(
     }
 
     private fun getSeriesTitle(): String {
-        return driver //
+        return webDriverConfiguration.getDriver() //
             .findElement(By.className("series-detail-title-description-area"))
             .findElement(By.tagName("h1"))
             .text
     }
 
     private fun getSeriesEpisodes(): List<SatoriReaderEpisode> {
-        return driver
+        return webDriverConfiguration.getDriver()
             .findElements(By.className("series-detail-grid-item"))
             .stream()
             .map { episode ->
@@ -118,24 +117,26 @@ class SeleniumSatoriReaderRepository(
 
     private fun openLinkInNewTab(linkWebElement: WebElement) {
         val href = linkWebElement.getDomAttribute("href")
-        driver.switchTo().newWindow(WindowType.TAB)
-        driver.get("${SATORI_BASE_URL}${href}")
+        webDriverConfiguration.getDriver().switchTo().newWindow(WindowType.TAB)
+        webDriverConfiguration.getDriver().get("${SATORI_BASE_URL}${href}")
     }
 
     private fun openLinkInNewTab(episodeUrl: String) {
-        driver.switchTo().newWindow(WindowType.TAB)
-        driver.get("${SATORI_BASE_URL}${episodeUrl}")
+        webDriverConfiguration.getDriver().switchTo().newWindow(WindowType.TAB)
+        webDriverConfiguration.getDriver().get("${SATORI_BASE_URL}${episodeUrl}")
     }
 
     private fun closeTab() {
-        driver.close()
-        driver.switchTo().window(driver.windowHandles.last())
+        driver().close()
+        driver().switchTo().window(driver().windowHandles.last())
     }
 
     private fun openSatoriReaderWebSite(driver: WebDriver) {
         driver.get("https://www.satorireader.com/series")
         driver.manage().window().maximize()
     }
+
+    private fun driver() = webDriverConfiguration.getDriver()
 
     companion object {
         private const val SATORI_BASE_URL = "https://satorireader.com"

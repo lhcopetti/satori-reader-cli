@@ -11,7 +11,8 @@ interface SatoriReaderRepository {
 
     fun login(request: SatoriReaderRepositoryRequest)
 
-    fun fetchAllSeries(request: SatoriReaderRepositoryRequest): List<SatoriReaderSeries>
+    fun fetchAllSeries(): List<SatoriReaderSeries>
 
-    fun resetProgress(episodes: List<SatoriReaderSeries>)
+    fun resetReadingProgress()
+
 }
