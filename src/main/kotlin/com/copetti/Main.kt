@@ -1,15 +1,14 @@
 package com.copetti;
 
+import com.copetti.cli.PrintAllEpisodesCommand
 import com.copetti.cli.ResetReadingProgressCommand
-import com.copetti.core.SatoriReaderRepositoryRequest
+import com.copetti.core.usecase.ListAllEpisodes
 import com.copetti.core.usecase.ResetReadingProgress
 import com.copetti.provider.selenium.SeleniumSatoriReaderRepository
 import com.copetti.provider.selenium.SeleniumWebDriverConfiguration
+import com.github.ajalt.clikt.core.CoreNoOpCliktCommand
 import com.github.ajalt.clikt.core.main
-import org.openqa.selenium.PageLoadStrategy
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.chrome.ChromeOptions
-import java.time.Duration
+import com.github.ajalt.clikt.core.subcommands
 
 private const val CONFIG_PATH = "./config.properties"
 
@@ -26,7 +25,14 @@ fun main(args: Array<String>) {
     try {
         val repository = SeleniumSatoriReaderRepository(driver)
         val resetReadingProgress = ResetReadingProgress(repository)
-        ResetReadingProgressCommand(resetReadingProgress).main(args)
+        val listAllEpisodes = ListAllEpisodes(repository)
+
+        CoreNoOpCliktCommand()
+            .subcommands(
+                ResetReadingProgressCommand(resetReadingProgress),
+                PrintAllEpisodesCommand(listAllEpisodes)
+            )
+            .main(args)
 
     } finally {
         driver.quit()
