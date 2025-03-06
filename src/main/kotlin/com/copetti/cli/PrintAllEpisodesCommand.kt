@@ -1,24 +1,24 @@
 package com.copetti.cli
 
-import com.copetti.core.model.SatoriCredentials
+import com.copetti.core.gateway.SatoriReaderCredentials
 import com.copetti.core.usecase.ListAllEpisodesRequest
 import com.copetti.core.usecase.ListAllEpisodes
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.groups.provideDelegate
+import com.github.ajalt.clikt.core.requireObject
 
 class PrintAllEpisodesCommand(
     private val listAllEpisodes: ListAllEpisodes,
 ) : CliktCommand() {
 
-    val baseOptions by BaseOptions()
+    private val config by requireObject<SatoriReaderCliContext>()
 
     override fun run() {
-        val username = baseOptions.username
-        val password = baseOptions.password
+        val username = config.credentials.username
+        val password = config.credentials.password
 
         val request = ListAllEpisodesRequest(
-            credentials = SatoriCredentials(
-                login = username,
+            credentials = SatoriReaderCredentials(
+                username = username,
                 password = password
             )
         )
@@ -27,6 +27,5 @@ class PrintAllEpisodesCommand(
             echo("${episode.title},${episode.edition},${episode.status},${episode.link}")
         }
     }
-
 
 }

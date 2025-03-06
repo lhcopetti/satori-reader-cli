@@ -1,21 +1,22 @@
 package com.copetti.cli
 
-import com.copetti.core.model.SatoriCredentials
+import com.copetti.core.gateway.SatoriReaderCredentials
 import com.copetti.core.usecase.ResetReadingProgress
 import com.copetti.core.usecase.ResetReadingProgressRequest
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.groups.provideDelegate
+import com.github.ajalt.clikt.core.requireObject
 
 class ResetReadingProgressCommand(
     private val resetReadingProgress: ResetReadingProgress
 ) : CliktCommand() {
 
-    private val baseOptions by BaseOptions()
+    private val config by requireObject<SatoriReaderCliContext>()
+
     override fun run() {
-        val username = baseOptions.username
-        val password = baseOptions.password
+        val username = config.credentials.username
+        val password = config.credentials.password
         val request = ResetReadingProgressRequest(
-            credentials = SatoriCredentials(login = username, password = password)
+            credentials = SatoriReaderCredentials(username = username, password = password)
         )
         resetReadingProgress.reset(request)
     }

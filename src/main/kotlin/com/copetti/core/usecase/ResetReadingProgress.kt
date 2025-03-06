@@ -1,25 +1,20 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.SatoriReaderRepository
-import com.copetti.core.SatoriReaderRepositoryRequest
-import com.copetti.core.model.SatoriCredentials
+import com.copetti.core.gateway.SatoriReaderCredentials
+import com.copetti.core.gateway.SatoriReaderProvider
+import com.copetti.core.gateway.SatoriReaderProviderRequest
 
 
 data class ResetReadingProgressRequest(
-    val credentials: SatoriCredentials
+    val credentials: SatoriReaderCredentials
 )
 
 class ResetReadingProgress(
-    private val repository: SatoriReaderRepository
+    private val repository: SatoriReaderProvider
 ) {
 
-
     fun reset(request: ResetReadingProgressRequest) {
-        val loginRequest = SatoriReaderRepositoryRequest(
-            login = request.credentials.login,
-            password = request.credentials.password
-        )
-        repository.login(loginRequest)
-        repository.resetReadingProgress()
+        val providerRequest = SatoriReaderProviderRequest(credentials = request.credentials)
+        repository.resetReadingProgress(providerRequest)
     }
 }

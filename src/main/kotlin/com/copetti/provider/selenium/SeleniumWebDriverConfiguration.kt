@@ -10,6 +10,7 @@ class SeleniumWebDriverConfiguration {
 
     private val webDriver: WebDriver by lazy {
         val options = ChromeOptions()
+//        options.addArguments("--headless=new")
         options.setPageLoadStrategy(PageLoadStrategy.EAGER)
         val driver = ChromeDriver(options)
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))

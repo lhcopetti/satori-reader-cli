@@ -1,7 +1,7 @@
 package com.copetti.provider.selenium
 
-import com.copetti.core.SatoriReaderRepository
-import com.copetti.core.SatoriReaderRepositoryRequest
+import com.copetti.core.gateway.SatoriReaderProvider
+import com.copetti.core.gateway.SatoriReaderProviderRequest
 import com.copetti.model.SatoriReaderEdition
 import com.copetti.model.SatoriReaderEpisode
 import com.copetti.model.SatoriReaderSeries
@@ -11,10 +11,10 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.WindowType
 
-class SeleniumSatoriReaderRepository(
+class SeleniumSatoriReaderProvider(
     private val webDriverConfiguration: SeleniumWebDriverConfiguration
-) : SatoriReaderRepository {
-    override fun login(request: SatoriReaderRepositoryRequest) {
+) : SatoriReaderProvider {
+    private fun login(request: SatoriReaderProviderRequest) {
         openSatoriReaderWebSite(driver())
         val signIn = driver().findElement(By.xpath("//a[@href=\"/signin\"]"))
         signIn.click()
@@ -23,12 +23,14 @@ class SeleniumSatoriReaderRepository(
         val passwordInput = driver().findElement(By.id("password"))
         val signInButton = driver().findElement(By.id("sign-in-button"))
 
-        usernameInput.sendKeys(request.login)
-        passwordInput.sendKeys(request.password)
+        usernameInput.sendKeys(request.credentials.username)
+        passwordInput.sendKeys(request.credentials.password)
         signInButton.click()
     }
 
-    override fun fetchAllSeries(): List<SatoriReaderSeries> {
+    override fun fetchAllSeries(request: SatoriReaderProviderRequest): List<SatoriReaderSeries> {
+        login(request)
+
         val seriesTiles = driver().findElement(By.className("series-tiles"))
         val allSeries = seriesTiles.findElements(By.tagName("a"))
         val series = mutableListOf<SatoriReaderSeries>()
@@ -50,9 +52,10 @@ class SeleniumSatoriReaderRepository(
         return series
     }
 
-    override fun resetReadingProgress() {
+    override fun resetReadingProgress(request: SatoriReaderProviderRequest) {
+        login(request)
 
-        val startedEditions = fetchAllSeries().stream()
+        val startedEditions = fetchAllSeries(request).stream()
             .flatMap { series -> series.episodes.stream() }
             .flatMap { episode -> episode.editions.stream() }
             .filter { edition -> edition.status != SatoriReaderStatus.UNREAD }
