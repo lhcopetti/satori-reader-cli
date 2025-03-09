@@ -51,7 +51,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         val response: String = OkHttpClient().newCall(
             Request.Builder()
                 .url(SATORI_READER_URL + seriesLink)
-                .header("SessionToken", token)
+                .header("Cookie", "SessionToken=$token")
                 .build()
         ).execute().body?.string() ?: ""
         val document = Jsoup.parse(response)
