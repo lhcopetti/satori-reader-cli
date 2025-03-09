@@ -16,7 +16,8 @@ class GenerateProgressDashboardCommand(
         val username = config.credentials.username
         val password = config.credentials.password
         val request = GenerateProgressDashboardRequest(
-            credentials = SatoriReaderCredentials(username = username, password = password)
+            credentials = SatoriReaderCredentials(username = username, password = password),
+            quiet = config.quiet
         )
         echo(generateProgressDashboard.generate(request))
     }

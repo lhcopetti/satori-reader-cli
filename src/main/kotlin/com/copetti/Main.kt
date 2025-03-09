@@ -1,29 +1,43 @@
 package com.copetti;
 
+import com.copetti.cli.GenerateProgressDashboardCommand
 import com.copetti.cli.PrintAllEpisodesCommand
 import com.copetti.cli.ResetReadingProgressCommand
 import com.copetti.cli.SatoriReaderCliCommand
-import com.copetti.core.usecase.ListAllEpisodes
-import com.copetti.core.usecase.ResetReadingProgress
-import com.copetti.provider.selenium.SeleniumSatoriReaderProvider
-import com.copetti.provider.selenium.SeleniumWebDriverConfiguration
+import com.copetti.core.usecase.*
+import com.copetti.provider.satori.SatoriReaderProviderLocator
+import com.copetti.provider.satori.selenium.SeleniumSatoriReaderProvider
+import com.copetti.provider.satori.selenium.SeleniumWebDriverConfiguration
+import com.copetti.provider.satori.webcrawler.WebCrawlerSatoriReaderProvider
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
-
-private const val CONFIG_PATH = "./config.properties"
 
 fun main(args: Array<String>) {
 
     val driver = SeleniumWebDriverConfiguration()
     try {
-        val repository = SeleniumSatoriReaderProvider(driver)
-        val resetReadingProgress = ResetReadingProgress(repository)
-        val listAllEpisodes = ListAllEpisodes(repository)
+        val webcrawlerSatoriReaderProvider = WebCrawlerSatoriReaderProvider()
+        val seleniumSatoriReaderProvider = SeleniumSatoriReaderProvider(SeleniumWebDriverConfiguration())
+        val satoriReaderProviderLocator = SatoriReaderProviderLocator(
+            webcrawlerSatoriReaderProvider,
+            seleniumSatoriReaderProvider
+        )
+        val resetReadingProgress = ResetReadingProgress(satoriReaderProviderLocator)
+        val listAllEpisodes = ListAllEpisodes(satoriReaderProviderLocator)
+        val retrieveReadingProgress = RetrieveReadingProgress(
+            selectPrimaryEdition = SelectPrimaryEdition(),
+            satoriReaderProviderLocator = satoriReaderProviderLocator
+        )
+        val generateProgressDashboard = GenerateProgressDashboard(
+            retrieveReadingProgress = retrieveReadingProgress,
+            buildProgressDashboard = BuildProgressDashboard()
+        )
 
         SatoriReaderCliCommand()
             .subcommands(
                 ResetReadingProgressCommand(resetReadingProgress),
-                PrintAllEpisodesCommand(listAllEpisodes)
+                PrintAllEpisodesCommand(listAllEpisodes),
+                GenerateProgressDashboardCommand(generateProgressDashboard)
             )
             .main(args)
 

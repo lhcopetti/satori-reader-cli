@@ -1,35 +1,41 @@
-# Ignore IntelliJ IDEA files
-.idea/
-*.iml
-*.iws
-
-# Ignore build output
-/out/
-build/
 target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Ignore dependency caches
-.gradle/
-.mvn/
-**/build/
+### IntelliJ IDEA ###
+.idea/
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
 
-# Ignore logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-*.DS_Store
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# Ignore compiled binaries
-*.class
-*.jar
-*.war
-*.ear
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Ignore generated files
-gen/
-bin/
+### VS Code ###
+.vscode/
 
-# Ignore OS-specific files
-Thumbs.db
+### Mac OS ###
 .DS_Store
+
+config.properties

@@ -1,4 +1,4 @@
-package com.copetti.provider.selenium
+package com.copetti.provider.satori.selenium
 
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.core.gateway.SatoriReaderProviderRequest
@@ -121,12 +121,12 @@ class SeleniumSatoriReaderProvider(
     private fun openLinkInNewTab(linkWebElement: WebElement) {
         val href = linkWebElement.getDomAttribute("href")
         webDriverConfiguration.getDriver().switchTo().newWindow(WindowType.TAB)
-        webDriverConfiguration.getDriver().get("${SATORI_BASE_URL}${href}")
+        webDriverConfiguration.getDriver().get("$SATORI_BASE_URL${href}")
     }
 
     private fun openLinkInNewTab(episodeUrl: String) {
         webDriverConfiguration.getDriver().switchTo().newWindow(WindowType.TAB)
-        webDriverConfiguration.getDriver().get("${SATORI_BASE_URL}${episodeUrl}")
+        webDriverConfiguration.getDriver().get("$SATORI_BASE_URL${episodeUrl}")
     }
 
     private fun closeTab() {

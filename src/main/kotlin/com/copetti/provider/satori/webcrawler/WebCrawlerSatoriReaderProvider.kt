@@ -1,4 +1,4 @@
-package com.copetti.provider.webcrawler
+package com.copetti.provider.satori.webcrawler
 
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.core.gateway.SatoriReaderProviderRequest

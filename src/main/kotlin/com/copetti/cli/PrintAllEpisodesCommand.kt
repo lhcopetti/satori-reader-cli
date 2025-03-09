@@ -1,8 +1,8 @@
 package com.copetti.cli
 
 import com.copetti.core.gateway.SatoriReaderCredentials
-import com.copetti.core.usecase.ListAllEpisodesRequest
 import com.copetti.core.usecase.ListAllEpisodes
+import com.copetti.core.usecase.ListAllEpisodesRequest
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
 
@@ -20,7 +20,8 @@ class PrintAllEpisodesCommand(
             credentials = SatoriReaderCredentials(
                 username = username,
                 password = password
-            )
+            ),
+            quiet = config.quiet
         )
         val allEpisodes = listAllEpisodes.print(request)
         allEpisodes.forEach { episode ->

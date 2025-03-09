@@ -16,7 +16,8 @@ class ResetReadingProgressCommand(
         val username = config.credentials.username
         val password = config.credentials.password
         val request = ResetReadingProgressRequest(
-            credentials = SatoriReaderCredentials(username = username, password = password)
+            credentials = SatoriReaderCredentials(username = username, password = password),
+            quiet = config.quiet
         )
         resetReadingProgress.reset(request)
     }

@@ -1,4 +1,4 @@
-package com.copetti.provider.selenium
+package com.copetti.provider.satori.selenium
 
 import org.openqa.selenium.PageLoadStrategy
 import org.openqa.selenium.WebDriver
@@ -10,7 +10,6 @@ class SeleniumWebDriverConfiguration {
 
     private val webDriver: WebDriver by lazy {
         val options = ChromeOptions()
-//        options.addArguments("--headless=new")
         options.setPageLoadStrategy(PageLoadStrategy.EAGER)
         val driver = ChromeDriver(options)
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
