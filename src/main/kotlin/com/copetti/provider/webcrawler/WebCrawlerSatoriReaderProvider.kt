@@ -72,7 +72,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
     }
 
     private fun mapEditions(episode: Element): List<SatoriReaderEdition> {
-        return episode.getElementsByClass("table")
+        return episode.getElementsByTag("table")
             .first()
             ?.getElementsByTag("tr")
             ?.drop(1)
