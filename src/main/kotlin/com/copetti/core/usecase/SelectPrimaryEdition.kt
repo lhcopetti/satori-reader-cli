@@ -8,7 +8,7 @@ import java.util.stream.Collectors
 class SelectPrimaryEdition {
 
     fun select(episode: SatoriReaderEpisode): SatoriReaderEdition {
-        val editionsByName = episode.editions.stream().collect(Collectors.toMap({ k -> k.name }, { v -> v }))
+        val editionsByName = episode.editions.stream().collect(Collectors.toMap({ k -> k.name.uppercase() }, { v -> v }))
         val selectedEdition = RANKED_EDITIONS.stream()
             .map { rankedEdition -> editionsByName[rankedEdition] }
             .filter(Objects::nonNull)

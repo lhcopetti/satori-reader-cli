@@ -58,4 +58,18 @@ class SelectPrimaryEditionTest {
         val result = selectPrimaryEdition.select(episode)
         assertEquals(medium, result)
     }
+
+    @Test
+    fun `should select the edition with sound effects`() {
+
+        val withSoundEffects = SatoriReaderEdition("With Sound Effects", "the-url", SatoriReaderStatus.COMPLETED)
+        val voiceOnly = SatoriReaderEdition("Voice Only", "the-url", SatoriReaderStatus.COMPLETED)
+        val episode = SatoriReaderEpisode(
+            title = "the-title",
+            editions = listOf(withSoundEffects, voiceOnly)
+        )
+
+        val result = selectPrimaryEdition.select(episode)
+        assertEquals(withSoundEffects, result)
+    }
 }
