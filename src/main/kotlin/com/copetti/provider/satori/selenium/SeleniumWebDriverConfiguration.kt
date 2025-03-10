@@ -1,14 +1,13 @@
 package com.copetti.provider.satori.selenium
 
 import org.openqa.selenium.PageLoadStrategy
-import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import java.time.Duration
 
 class SeleniumWebDriverConfiguration {
 
-    private val webDriver: WebDriver by lazy {
+    private val webDriver = lazy {
         val options = ChromeOptions()
         options.setPageLoadStrategy(PageLoadStrategy.EAGER)
         val driver = ChromeDriver(options)
@@ -16,7 +15,12 @@ class SeleniumWebDriverConfiguration {
         driver
     }
 
-    fun getDriver() = webDriver
+    fun getDriver() = webDriver.value
 
-    fun quit() = webDriver.quit()
+    fun quit() {
+        if (!webDriver.isInitialized()) {
+            return
+        }
+        webDriver.value.quit()
+    }
 }

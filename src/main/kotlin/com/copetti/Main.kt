@@ -30,14 +30,15 @@ fun main(args: Array<String>) {
         )
         val generateProgressDashboard = GenerateProgressDashboard(
             retrieveReadingProgress = retrieveReadingProgress,
-            buildProgressDashboard = BuildProgressDashboard()
+            buildProgressDashboard = BuildProgressDashboard(GetProgressStatusMarker())
         )
+        val updateReadme = UpdateReadme(generateProgressDashboard = generateProgressDashboard)
 
         SatoriReaderCliCommand()
             .subcommands(
                 ResetReadingProgressCommand(resetReadingProgress),
                 PrintAllEpisodesCommand(listAllEpisodes),
-                GenerateProgressDashboardCommand(generateProgressDashboard)
+                GenerateProgressDashboardCommand(updateReadme)
             )
             .main(args)
 

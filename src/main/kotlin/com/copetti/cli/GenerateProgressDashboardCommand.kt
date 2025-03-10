@@ -1,13 +1,13 @@
 package com.copetti.cli
 
 import com.copetti.core.gateway.SatoriReaderCredentials
-import com.copetti.core.usecase.GenerateProgressDashboard
-import com.copetti.core.usecase.GenerateProgressDashboardRequest
+import com.copetti.core.usecase.UpdateReadme
+import com.copetti.core.usecase.UpdateReadmeRequest
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
 
 class GenerateProgressDashboardCommand(
-    private val generateProgressDashboard: GenerateProgressDashboard
+    private val updateReadme: UpdateReadme
 ) : CliktCommand() {
 
     private val config by requireObject<SatoriReaderCliContext>()
@@ -15,10 +15,10 @@ class GenerateProgressDashboardCommand(
     override fun run() {
         val username = config.credentials.username
         val password = config.credentials.password
-        val request = GenerateProgressDashboardRequest(
+        val request = UpdateReadmeRequest(
             credentials = SatoriReaderCredentials(username = username, password = password),
             quiet = config.quiet
         )
-        echo(generateProgressDashboard.generate(request))
+        updateReadme.update(request)
     }
 }

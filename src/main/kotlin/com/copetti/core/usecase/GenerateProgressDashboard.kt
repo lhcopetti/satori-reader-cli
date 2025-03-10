@@ -20,4 +20,5 @@ class GenerateProgressDashboard(
             BuildProgressDashboardRequest(progression)
         )
     }
+
 }
