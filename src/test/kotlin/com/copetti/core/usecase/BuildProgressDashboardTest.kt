@@ -44,7 +44,17 @@ class BuildProgressDashboardTest {
             COMPCOMPUNREUNRE
 
         """.trimIndent()
+
+
+
         val actual = buildProgressDashboard.build(request)
+
+        for (byte in expected.toByteArray())
+            print(String.format("%02x ", byte))
+        println()
+        for (byte in actual.toByteArray())
+            print(String.format("%02x ", byte))
+        println()
 
         assertEquals(expected, actual)
     }
