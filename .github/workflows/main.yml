@@ -25,6 +25,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Check for CRLF line endings
+        run: |
+          if git grep -Il $'\r' -- ':!*.gitattributes'; then
+            echo "❌ Some files have CRLF line endings. Please use LF."
+            exit 1
+          fi
+
       - name: Build Maven Project
         run: mvn clean package
 
