@@ -41,7 +41,10 @@ jobs:
         run: mvn clean package
 
       - name: Run the JAR File
-        run: java -jar target/*.jar
+        env:
+          USERNAME: ${{ secrets.SATORI_READER_LOGIN }}
+          PASSWORD: ${{ secrets.SATORI_READER_PASSWORD }}
+        run: java -jar target/*.jar --username "$USERNAME" --password "$PASSWORD"
 
       - name: Update README.md
         run: |
