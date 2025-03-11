@@ -1,0 +1,53 @@
+# Normalize line endings for text files
+* text=auto
+
+# Treat Kotlin source files as text
+*.kt text eol=lf
+*.kts text eol=lf
+
+# Treat Java source files as text
+*.java text eol=lf
+
+# Ignore changes in local executable permissions
+*.sh text eol=lf
+
+# Binary files should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mp4 binary
+
+# Prevent unnecessary changes in Gradle wrapper files
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+gradle/wrapper/gradle-wrapper.jar binary
+gradle/wrapper/gradle-wrapper.properties text eol=lf
+
+# Ignore IntelliJ IDEA specific files
+.idea/** binary
+
+# Ignore compiled and generated files
+*.class binary
+*.jar binary
+*.war binary
+*.ear binary
+*.apk binary
+*.aar binary
+*.o binary
+*.so binary
+*.dylib binary
+*.exe binary
+*.dll binary
+*.pdb binary
+
+# Ignore Kotlin build output
+build/** binary
+
+# Ignore logs and temp files
+*.log text
+.DS_Store binary
+Thumbs.db binary
+
