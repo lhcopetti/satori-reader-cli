@@ -1,0 +1,7 @@
+
+- remove selenium
+- remove idea files from versioning code
+- update cli name to update readme (insttead of generate dashboard)
+- implement progress reset
+- add throttle when reseting progress
+- add tests
