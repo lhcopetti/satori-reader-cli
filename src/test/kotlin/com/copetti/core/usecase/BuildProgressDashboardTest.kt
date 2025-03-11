@@ -36,16 +36,16 @@ class BuildProgressDashboardTest {
         val request = BuildProgressDashboardRequest(listOf(progress))
 
         val expected = """
-            ### Series progression: (0/1) - 0,00%
-            ### Episodes progression: (2/4) - 50,00%
+            ### Series progression: (0/1) - 0.00%
+            ### Episodes progression: (2/4) - 50.00%
 
             ## Progression Dashboard
 
             COMPCOMPUNREUNRE
 
         """.trimIndent()
-        val actual = buildProgressDashboard.build(request)
 
+        val actual = buildProgressDashboard.build(request)
         assertEquals(expected, actual)
     }
 
@@ -55,8 +55,8 @@ class BuildProgressDashboardTest {
         val request = BuildProgressDashboardRequest(listOf(progress))
 
         val expected = """
-            ### Series progression: (0/1) - 0,00%
-            ### Episodes progression: (5/8) - 62,50%
+            ### Series progression: (0/1) - 0.00%
+            ### Episodes progression: (5/8) - 62.50%
 
             ## Progression Dashboard
 
@@ -78,8 +78,8 @@ class BuildProgressDashboardTest {
         val request = BuildProgressDashboardRequest(progress)
 
         val expected = """
-            ### Series progression: (0/3) - 0,00%
-            ### Episodes progression: (9/27) - 33,33%
+            ### Series progression: (0/3) - 0.00%
+            ### Episodes progression: (9/27) - 33.33%
 
             ## Progression Dashboard
 
@@ -105,8 +105,8 @@ class BuildProgressDashboardTest {
         val request = BuildProgressDashboardRequest(progress)
 
         val expected = """
-            ### Series progression: (2/7) - 28,57%
-            ### Episodes progression: (28/45) - 62,22%
+            ### Series progression: (2/7) - 28.57%
+            ### Episodes progression: (28/45) - 62.22%
 
             ## Progression Dashboard
 
