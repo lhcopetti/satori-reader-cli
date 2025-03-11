@@ -19,7 +19,7 @@ import org.jsoup.nodes.Element
 class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
     override fun fetchAllSeries(request: SatoriReaderProviderRequest): List<SatoriReaderSeries> {
         val token = login(request)
-        val seriesLinks = fetchSeriesLinks().take(1)
+        val seriesLinks = fetchSeriesLinks()
         return seriesLinks.map { link -> mapEpisodes(token, link) }
     }
 
