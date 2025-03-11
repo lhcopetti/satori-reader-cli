@@ -1,6 +1,8 @@
 package com.copetti.core.usecase
 
 import com.copetti.model.SatoriReaderStatus
+import java.text.NumberFormat
+import java.util.*
 
 
 data class BuildProgressDashboardRequest(
@@ -33,15 +35,17 @@ class BuildProgressDashboard(
 
     private fun getSeriesProgression(request: BuildProgressDashboardRequest): String {
         val total = request.progression.size
-        val completedSeries =
-            request.progression.count { series -> series.episodes.all(this::isEpisodeComplete) }
-        return "(${completedSeries}/${total}) - ${String.format("%.2f", 100.0 * completedSeries / total)}%"
+        val completedSeries = request.progression.count { series -> series.episodes.all(this::isEpisodeComplete) }
+        val completionPercent = NUMBER_FORMATTER.format(100.0 * completedSeries / total)
+
+        return "(${completedSeries}/${total}) - $completionPercent%"
     }
 
     private fun getEpisodesProgression(request: BuildProgressDashboardRequest): String {
         val total = request.progression.flatMap(SeriesProgression::episodes).size
         val completedEpisodes = request.progression.flatMap(SeriesProgression::episodes).count(this::isEpisodeComplete)
-        return "(${completedEpisodes}/${total}) - ${String.format("%.2f", 100.0 * completedEpisodes / total)}%"
+        val completionPercent = NUMBER_FORMATTER.format(100.0 * completedEpisodes / total)
+        return "(${completedEpisodes}/${total}) - ${completionPercent}%"
     }
 
     private fun isEpisodeComplete(episodeProgression: EpisodeProgression) =
@@ -57,4 +61,12 @@ class BuildProgressDashboard(
         return completed + unread
     }
 
+    companion object {
+        private val NUMBER_FORMATTER: NumberFormat = NumberFormat.getNumberInstance(Locale.US)
+
+        init {
+            NUMBER_FORMATTER.maximumFractionDigits = 2
+            NUMBER_FORMATTER.minimumFractionDigits = 2
+        }
+    }
 }
