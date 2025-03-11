@@ -1,8 +1,4 @@
 name: Build and Update README
-jobs:
-  job-name:
-    permissions:
-      contents: write
 on:
   push:
     branches:
