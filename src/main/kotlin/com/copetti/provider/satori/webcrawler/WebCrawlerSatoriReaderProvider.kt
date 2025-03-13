@@ -1,11 +1,9 @@
 package com.copetti.provider.satori.webcrawler
 
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.core.gateway.SatoriReaderProviderRequest
-import com.copetti.model.SatoriReaderEdition
-import com.copetti.model.SatoriReaderEpisode
-import com.copetti.model.SatoriReaderSeries
-import com.copetti.model.SatoriReaderStatus
+import com.copetti.core.usecase.FetchAllSeriesRequest
+import com.copetti.core.usecase.ResetReadingProgressRequest
+import com.copetti.model.*
 import com.copetti.provider.satori.SatoriReaderWebConstants.SATORI_READER_URL
 import com.copetti.provider.satori.SatoriReaderWebConstants.SERIES_URL
 import com.copetti.provider.satori.SatoriReaderWebConstants.SIGNIN_URL
@@ -17,13 +15,13 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
-    override fun fetchAllSeries(request: SatoriReaderProviderRequest): List<SatoriReaderSeries> {
-        val token = login(request)
+    override fun fetchAllSeries(request: FetchAllSeriesRequest): List<SatoriReaderSeries> {
+        val token = login(request.credentials)
         val seriesLinks = fetchSeriesLinks()
         return seriesLinks.map { link -> mapEpisodes(token, link) }
     }
 
-    override fun resetReadingProgress(request: SatoriReaderProviderRequest) {
+    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
         throw NotImplementedError()
     }
 
@@ -92,10 +90,10 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
             } ?: listOf()
     }
 
-    private fun login(request: SatoriReaderProviderRequest): String {
+    private fun login(credentials: SatoriReaderCredentials): String {
         val formBody = FormBody.Builder()
-            .add("username", request.credentials.username)
-            .add("password", request.credentials.password)
+            .add("username", credentials.username)
+            .add("password", credentials.password)
             .build()
 
         val signInRequest = Request.Builder()

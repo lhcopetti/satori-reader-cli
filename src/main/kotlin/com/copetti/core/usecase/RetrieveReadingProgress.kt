@@ -1,15 +1,10 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.gateway.SatoriReaderCredentials
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.core.gateway.SatoriReaderProviderRequest
+import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderEpisode
 import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
-
-data class RetrieveReadingProgressRequest(
-    val credentials: SatoriReaderCredentials
-)
 
 data class SeriesProgression(
     val title: String,
@@ -21,13 +16,17 @@ data class EpisodeProgression(
     val status: SatoriReaderStatus
 )
 
+data class RetrieveReadingProgressRequest(
+    val credentials: SatoriReaderCredentials
+)
+
 class RetrieveReadingProgress(
     private val selectPrimaryEdition: SelectPrimaryEdition,
     private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
     fun retrieve(request: RetrieveReadingProgressRequest): List<SeriesProgression> {
-        val providerRequest = SatoriReaderProviderRequest(credentials = request.credentials)
+        val providerRequest = FetchAllSeriesRequest(credentials = request.credentials)
         val allSeries = satoriReaderProvider.fetchAllSeries(providerRequest)
         return allSeries.map(this::mapSeries)
     }

@@ -1,6 +1,6 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.gateway.SatoriReaderCredentials
+import com.copetti.model.SatoriReaderCredentials
 
 data class GenerateProgressDashboardRequest(
     val credentials: SatoriReaderCredentials

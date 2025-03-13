@@ -1,8 +1,7 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.gateway.SatoriReaderCredentials
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.core.gateway.SatoriReaderProviderRequest
+import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderEdition
 import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
@@ -25,7 +24,7 @@ class ListAllEpisodes(
 ) {
 
     fun print(request: ListAllEpisodesRequest): List<EpisodeStatus> {
-        val providerRequest = SatoriReaderProviderRequest(credentials = request.credentials)
+        val providerRequest = FetchAllSeriesRequest(credentials = request.credentials)
         val allSeries = satoriReaderProvider.fetchAllSeries(providerRequest)
         return listAllEpisodes(allSeries)
     }

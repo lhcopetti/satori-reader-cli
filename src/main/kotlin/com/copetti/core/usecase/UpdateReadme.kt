@@ -1,6 +1,6 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.gateway.SatoriReaderCredentials
+import com.copetti.model.SatoriReaderCredentials
 import java.nio.file.Files
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,6 +1,6 @@
 package com.copetti.cli
 
-import com.copetti.core.gateway.SatoriReaderCredentials
+import com.copetti.model.SatoriReaderCredentials
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.prompt

@@ -4,15 +4,15 @@ import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
 
 
-data class ResetReadingProgressRequest(
+data class FetchAllSeriesRequest(
     val credentials: SatoriReaderCredentials
 )
 
-class ResetReadingProgress(
+class FetchAllSeries(
     private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
-    fun reset(request: ResetReadingProgressRequest) {
-        satoriReaderProvider.resetReadingProgress(ResetReadingProgressRequest(credentials = request.credentials))
+    fun fetch(request: ResetReadingProgressRequest) {
+        satoriReaderProvider.fetchAllSeries(FetchAllSeriesRequest(credentials = request.credentials))
     }
 }

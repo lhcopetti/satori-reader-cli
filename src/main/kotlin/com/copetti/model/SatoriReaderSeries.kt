@@ -1,5 +1,10 @@
 package com.copetti.model
 
+data class SatoriReaderCredentials(
+    val username: String,
+    val password: String
+)
+
 data class SatoriReaderSeries(
     val title: String,
     val episodes: List<SatoriReaderEpisode>
