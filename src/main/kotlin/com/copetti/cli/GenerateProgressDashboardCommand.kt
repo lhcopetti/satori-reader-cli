@@ -16,8 +16,7 @@ class GenerateProgressDashboardCommand(
         val username = config.credentials.username
         val password = config.credentials.password
         val request = UpdateReadmeRequest(
-            credentials = SatoriReaderCredentials(username = username, password = password),
-            quiet = config.quiet
+            credentials = SatoriReaderCredentials(username = username, password = password)
         )
         updateReadme.update(request)
     }

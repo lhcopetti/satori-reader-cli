@@ -20,8 +20,7 @@ class PrintAllEpisodesCommand(
             credentials = SatoriReaderCredentials(
                 username = username,
                 password = password
-            ),
-            quiet = config.quiet
+            )
         )
         val allEpisodes = listAllEpisodes.print(request)
         allEpisodes.forEach { episode ->

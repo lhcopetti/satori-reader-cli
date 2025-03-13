@@ -6,9 +6,9 @@ import com.copetti.model.SatoriReaderEdition
 import com.copetti.model.SatoriReaderEpisode
 import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
-import com.copetti.model.SatoriReaderWebConstants.SATORI_READER_URL
-import com.copetti.model.SatoriReaderWebConstants.SERIES_URL
-import com.copetti.model.SatoriReaderWebConstants.SIGNIN_URL
+import com.copetti.provider.satori.SatoriReaderWebConstants.SATORI_READER_URL
+import com.copetti.provider.satori.SatoriReaderWebConstants.SERIES_URL
+import com.copetti.provider.satori.SatoriReaderWebConstants.SIGNIN_URL
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request

@@ -8,10 +8,8 @@ import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
 
 data class RetrieveReadingProgressRequest(
-    val credentials: SatoriReaderCredentials,
-    val quiet: Boolean
-) {
-}
+    val credentials: SatoriReaderCredentials
+)
 
 data class SeriesProgression(
     val title: String,

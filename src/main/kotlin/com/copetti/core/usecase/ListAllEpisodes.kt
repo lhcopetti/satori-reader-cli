@@ -3,14 +3,13 @@ package com.copetti.core.usecase
 import com.copetti.core.gateway.SatoriReaderCredentials
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.core.gateway.SatoriReaderProviderRequest
+import com.copetti.model.SatoriReaderEdition
 import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
 import java.util.*
-import java.util.stream.Collectors
 
 data class ListAllEpisodesRequest(
-    val credentials: SatoriReaderCredentials,
-    val quiet: Boolean
+    val credentials: SatoriReaderCredentials
 )
 
 data class EpisodeStatus(
@@ -35,12 +34,12 @@ class ListAllEpisodes(
         val episodes = mutableListOf<EpisodeStatus>()
         for (series in allSeries) {
             for (episode in series.episodes) {
-                val editionsByName = episode.editions.stream().collect(Collectors.toMap({ k -> k.name }, { v -> v }))
-                val selectedEdition = RANKED_EDITIONS.stream()
+                val editionsByName = episode.editions.groupBy(SatoriReaderEdition::name)
+                val selectedEdition: SatoriReaderEdition = RANKED_EDITIONS
                     .map { rankedEdition -> editionsByName[rankedEdition] }
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElseThrow { IllegalStateException("Could not find a ranked edition") }!!
+                    .first(Objects::nonNull)
+                    ?.first()
+                    ?: throw IllegalStateException("Could not find a ranked edition")
 
                 val episodeStatus = EpisodeStatus(
                     title = series.title,

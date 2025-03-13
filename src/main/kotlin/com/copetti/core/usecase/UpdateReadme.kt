@@ -7,8 +7,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
 
 data class UpdateReadmeRequest(
-    val credentials: SatoriReaderCredentials,
-    val quiet: Boolean
+    val credentials: SatoriReaderCredentials
 )
 
 class UpdateReadme(
@@ -31,8 +30,7 @@ class UpdateReadme(
 
     private fun getProgressionDashboard(request: UpdateReadmeRequest): String {
         val generateRequest = GenerateProgressDashboardRequest(
-            credentials = request.credentials,
-            quiet = request.quiet
+            credentials = request.credentials
         )
         return generateProgressDashboard.generate(generateRequest)
     }

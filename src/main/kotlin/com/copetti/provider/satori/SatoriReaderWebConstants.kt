@@ -1,4 +1,4 @@
-package com.copetti.model
+package com.copetti.provider.satori
 
 object SatoriReaderWebConstants {
     const val SATORI_READER_URL = "https://satorireader.com/"

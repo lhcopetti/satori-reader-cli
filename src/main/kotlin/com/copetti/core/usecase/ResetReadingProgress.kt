@@ -6,8 +6,7 @@ import com.copetti.core.gateway.SatoriReaderProviderRequest
 
 
 data class ResetReadingProgressRequest(
-    val credentials: SatoriReaderCredentials,
-    val quiet: Boolean
+    val credentials: SatoriReaderCredentials
 )
 
 class ResetReadingProgress(
