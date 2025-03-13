@@ -1,12 +1,11 @@
 package com.copetti.core.usecase
 
 import com.copetti.core.gateway.SatoriReaderCredentials
+import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.core.gateway.SatoriReaderProviderRequest
 import com.copetti.model.SatoriReaderEpisode
 import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
-import com.copetti.provider.satori.SatoriReaderProviderLocator
-import com.copetti.provider.satori.SatoriReaderProviderLocatorRequest
 
 data class RetrieveReadingProgressRequest(
     val credentials: SatoriReaderCredentials,
@@ -26,17 +25,14 @@ data class EpisodeProgression(
 
 class RetrieveReadingProgress(
     private val selectPrimaryEdition: SelectPrimaryEdition,
-    private val satoriReaderProviderLocator: SatoriReaderProviderLocator
+    private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
     fun retrieve(request: RetrieveReadingProgressRequest): List<SeriesProgression> {
         val providerRequest = SatoriReaderProviderRequest(credentials = request.credentials)
-        val allSeries = locate(request).fetchAllSeries(providerRequest)
+        val allSeries = satoriReaderProvider.fetchAllSeries(providerRequest)
         return allSeries.map(this::mapSeries)
     }
-
-    private fun locate(request: RetrieveReadingProgressRequest) =
-        satoriReaderProviderLocator.locate(SatoriReaderProviderLocatorRequest(quiet = request.quiet))
 
     private fun mapSeries(series: SatoriReaderSeries): SeriesProgression {
         return SeriesProgression(
