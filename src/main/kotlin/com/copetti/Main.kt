@@ -1,6 +1,6 @@
 package com.copetti;
 
-import com.copetti.cli.GenerateProgressDashboardCommand
+import com.copetti.cli.UpdateReadmeProgressCommand
 import com.copetti.cli.PrintAllEpisodesCommand
 import com.copetti.cli.ResetReadingProgressCommand
 import com.copetti.cli.SatoriReaderCliCommand
@@ -21,13 +21,13 @@ fun main(args: Array<String>) {
         retrieveReadingProgress = retrieveReadingProgress,
         buildProgressDashboard = BuildProgressDashboard(GetProgressStatusMarker())
     )
-    val updateReadme = UpdateReadme(generateProgressDashboard = generateProgressDashboard)
+    val updateReadmeProgress = UpdateReadmeProgress(generateProgressDashboard = generateProgressDashboard)
 
     SatoriReaderCliCommand()
         .subcommands(
             ResetReadingProgressCommand(resetReadingProgress),
             PrintAllEpisodesCommand(listAllEpisodes),
-            GenerateProgressDashboardCommand(updateReadme)
+            UpdateReadmeProgressCommand(updateReadmeProgress)
         )
         .main(args)
 }

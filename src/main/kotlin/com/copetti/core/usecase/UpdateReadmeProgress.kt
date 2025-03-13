@@ -10,7 +10,7 @@ data class UpdateReadmeRequest(
     val credentials: SatoriReaderCredentials
 )
 
-class UpdateReadme(
+class UpdateReadmeProgress(
     private val generateProgressDashboard: GenerateProgressDashboard
 ) {
 

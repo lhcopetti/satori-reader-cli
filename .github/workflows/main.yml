@@ -40,7 +40,7 @@ jobs:
         env:
           USERNAME: ${{ secrets.SATORI_READER_LOGIN }}
           PASSWORD: ${{ secrets.SATORI_READER_PASSWORD }}
-        run: java -jar target/*.jar --username "$USERNAME" --password "$PASSWORD" generate-progress-dashboard
+        run: java -jar target/*.jar --username "$USERNAME" --password "$PASSWORD" update-readme-progress
 
       - name: Commit and Push Changes
         run: |
