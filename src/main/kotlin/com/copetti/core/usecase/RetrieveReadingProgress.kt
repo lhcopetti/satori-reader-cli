@@ -22,12 +22,12 @@ data class RetrieveReadingProgressRequest(
 
 class RetrieveReadingProgress(
     private val selectPrimaryEdition: SelectPrimaryEdition,
-    private val satoriReaderProvider: SatoriReaderProvider
+    private val fetchAllContent: FetchAllContent
 ) {
 
     fun retrieve(request: RetrieveReadingProgressRequest): List<SeriesProgression> {
-        val providerRequest = FetchAllSeriesRequest(credentials = request.credentials)
-        val allSeries = satoriReaderProvider.fetchAllSeries(providerRequest)
+        val providerRequest = FetchAllContentRequest(credentials = request.credentials)
+        val allSeries = fetchAllContent.fetchAllContent(providerRequest)
         return allSeries.map(this::mapSeries)
     }
 

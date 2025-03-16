@@ -20,12 +20,12 @@ data class EpisodeStatus(
 
 
 class ListAllEpisodes(
-    private val satoriReaderProvider: SatoriReaderProvider
+    private val fetchAllContent: FetchAllContent
 ) {
 
     fun print(request: ListAllEpisodesRequest): List<EpisodeStatus> {
-        val providerRequest = FetchAllSeriesRequest(credentials = request.credentials)
-        val allSeries = satoriReaderProvider.fetchAllSeries(providerRequest)
+        val providerRequest = FetchAllContentRequest(credentials = request.credentials)
+        val allSeries = fetchAllContent.fetchAllContent(providerRequest)
         return listAllEpisodes(allSeries)
     }
 

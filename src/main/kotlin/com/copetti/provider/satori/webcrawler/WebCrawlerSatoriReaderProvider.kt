@@ -1,7 +1,6 @@
 package com.copetti.provider.satori.webcrawler
 
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.core.usecase.FetchAllSeriesRequest
 import com.copetti.core.usecase.ResetReadingProgressRequest
 import com.copetti.model.*
 import com.copetti.provider.satori.SatoriReaderWebConstants.SATORI_READER_URL
@@ -67,23 +66,12 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
             .toList()
     }
 
-
-    override fun fetchAllSeries(request: FetchAllSeriesRequest): List<SatoriReaderSeriesContent> {
-        val token = login(request.credentials)
-        val seriesLinks = fetchSeries()
-        return seriesLinks.map { link -> mapEpisodes(token, link) }
-    }
-
-    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
-        throw NotImplementedError()
-    }
-
-    private fun mapEpisodes(token: SatoriReaderLoginToken, seriesLink: SatoriReaderSeries): SatoriReaderSeriesContent {
+    override fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent {
 
         val response: String = OkHttpClient().newCall(
             Request.Builder()
-                .url(SATORI_READER_URL + seriesLink.link)
-                .header("Cookie", "SessionToken=${token.sessionToken}")
+                .url(SATORI_READER_URL + request.series.link)
+                .header("Cookie", "SessionToken=${request.token.sessionToken}")
                 .build()
         ).execute().body?.string() ?: ""
         val document = Jsoup.parse(response)
@@ -95,6 +83,10 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
             .map { episode -> mapEpisodes(episode) }
 
         return SatoriReaderSeriesContent(title = seriesTitle, episodes = episodes)
+    }
+
+    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
+        throw NotImplementedError()
     }
 
     private fun mapEpisodes(episode: Element): SatoriReaderEpisode {
