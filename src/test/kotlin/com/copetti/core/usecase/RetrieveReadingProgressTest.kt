@@ -1,5 +1,6 @@
 package com.copetti.core.usecase
 
+import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.*
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -14,6 +15,8 @@ import kotlin.test.assertEquals
 class RetrieveReadingProgressTest {
 
     @MockK
+    private lateinit var satoriReaderProvider: SatoriReaderProvider
+    @MockK
     private lateinit var retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
 
     @InjectMockKs
@@ -21,6 +24,7 @@ class RetrieveReadingProgressTest {
 
     @Test
     fun `should retrieve all series and select the primary edition for each episode`() {
+        val token = SatoriReaderLoginToken(sessionToken = "token")
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
 
         val firstEpisodeAEdition =
@@ -40,6 +44,7 @@ class RetrieveReadingProgressTest {
         val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))
 
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
+        every { satoriReaderProvider.login(credentials) } returns token
 
         val request = RetrieveReadingProgressRequest(credentials = credentials)
         val actual = retrieveReadingProgress.retrieve(request)
@@ -60,6 +65,7 @@ class RetrieveReadingProgressTest {
 
         assertEquals(expected, actual)
 
-        verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(credentials)) }
+        verify { satoriReaderProvider.login(request.credentials) }
+        verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token = token)) }
     }
 }

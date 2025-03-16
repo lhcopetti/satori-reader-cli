@@ -1,25 +1,27 @@
 package com.copetti.core.usecase
 
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.model.*
+import com.copetti.model.FetchSeriesContentRequest
+import com.copetti.model.SatoriReaderLoginToken
+import com.copetti.model.SatoriReaderSeriesContent
+import com.copetti.model.SatoriReaderSeriesReference
 
 
 data class FetchAllSatoriReaderContentRequest(
-    val credentials: SatoriReaderCredentials
+    val token: SatoriReaderLoginToken
 )
 
 class FetchAllSatoriReaderContent(
     private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
-    fun fetchAllContent(request: FetchAllSatoriReaderContentRequest): List<SatoriReaderSeriesContent> {
-        val token = satoriReaderProvider.login(request.credentials)
+    fun fetch(request: FetchAllSatoriReaderContentRequest): List<SatoriReaderSeriesContent> {
         return satoriReaderProvider.fetchSeries()
-            .map { series -> fetchSeriesContent(token, series) }
+            .map { series -> fetchSeriesContent(request, series) }
     }
 
-    private fun fetchSeriesContent(token: SatoriReaderLoginToken, series: SatoriReaderSeriesReference) =
+    private fun fetchSeriesContent(request: FetchAllSatoriReaderContentRequest, series: SatoriReaderSeriesReference) =
         satoriReaderProvider.fetchSeriesContent(
-            FetchSeriesContentRequest(token = token, series = series)
+            FetchSeriesContentRequest(token = request.token, series = series)
         )
 }

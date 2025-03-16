@@ -3,7 +3,7 @@ package com.copetti.core.usecase
 import com.copetti.model.*
 
 data class RetrieveAllSatoriReaderSeriesRequest(
-    val credentials: SatoriReaderCredentials
+    val token: SatoriReaderLoginToken
 )
 
 class RetrieveAllSatoriReaderSeries(
@@ -12,9 +12,10 @@ class RetrieveAllSatoriReaderSeries(
 ) {
 
     fun retrieve(request: RetrieveAllSatoriReaderSeriesRequest): List<SatoriReaderSeries> {
-        val providerRequest = FetchAllSatoriReaderContentRequest(credentials = request.credentials)
-        val allSeries = fetchAllSatoriReaderContent.fetchAllContent(providerRequest)
-        return allSeries.map(this::mapSeries)
+        val providerRequest = FetchAllSatoriReaderContentRequest(token = request.token)
+        val allSeries = fetchAllSatoriReaderContent.fetch(providerRequest)
+        return allSeries
+            .map(this::mapSeries)
     }
 
     private fun mapSeries(series: SatoriReaderSeriesContent): SatoriReaderSeries {

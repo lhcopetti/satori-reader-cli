@@ -24,7 +24,7 @@ class RetrieveAllSatoriReaderSeriesTest {
 
     @Test
     fun `should retrieve all series and select the primary edition for each episode`() {
-        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+        val token = SatoriReaderLoginToken(sessionToken = "token")
 
         val firstEpisodeA = SatoriReaderEpisode(title = "A:episode 1", editions = listOf())
         val firstEpisodeAEdition =
@@ -45,9 +45,9 @@ class RetrieveAllSatoriReaderSeriesTest {
 
         val seriesB = SatoriReaderSeriesContent(title = "B", episodes = listOf(firstEpisodeB))
 
-        every { fetchAllSatoriReaderContent.fetchAllContent(any()) } returns listOf(seriesA, seriesB)
+        every { fetchAllSatoriReaderContent.fetch(any()) } returns listOf(seriesA, seriesB)
 
-        val request = RetrieveAllSatoriReaderSeriesRequest(credentials = credentials)
+        val request = RetrieveAllSatoriReaderSeriesRequest(token = token)
         val actual = retrieveAllSatoriReaderSeries.retrieve(request)
 
         val expected = listOf(
@@ -66,7 +66,7 @@ class RetrieveAllSatoriReaderSeriesTest {
 
         assertEquals(expected, actual)
 
-        verify { fetchAllSatoriReaderContent.fetchAllContent(FetchAllSatoriReaderContentRequest(credentials)) }
+        verify { fetchAllSatoriReaderContent.fetch(FetchAllSatoriReaderContentRequest(token = token)) }
         verify { selectPrimaryEdition.select(firstEpisodeA) }
         verify { selectPrimaryEdition.select(secondEpisodeA) }
         verify { selectPrimaryEdition.select(firstEpisodeB) }

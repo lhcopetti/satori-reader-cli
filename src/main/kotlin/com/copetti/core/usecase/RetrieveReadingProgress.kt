@@ -1,5 +1,6 @@
 package com.copetti.core.usecase
 
+import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderStatus
 
@@ -18,11 +19,13 @@ data class RetrieveReadingProgressRequest(
 )
 
 class RetrieveReadingProgress(
+    private val satoriReaderProvider: SatoriReaderProvider,
     private val retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
 ) {
 
     fun retrieve(request: RetrieveReadingProgressRequest): List<SeriesProgression> {
-        val providerRequest = RetrieveAllSatoriReaderSeriesRequest(credentials = request.credentials)
+        val token = satoriReaderProvider.login(request.credentials)
+        val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
         val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
         return allSeries.map { series ->
             SeriesProgression(

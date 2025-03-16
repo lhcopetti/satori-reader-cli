@@ -1,6 +1,5 @@
 package com.copetti.core.gateway
 
-import com.copetti.core.usecase.ResetReadingProgressRequest
 import com.copetti.model.*
 
 
@@ -12,6 +11,6 @@ interface SatoriReaderProvider {
 
     fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent
 
-    fun resetReadingProgress(request: ResetReadingProgressRequest)
+    fun resetReadingProgress(request: ResetEditionReadingProgressRequest)
 
 }

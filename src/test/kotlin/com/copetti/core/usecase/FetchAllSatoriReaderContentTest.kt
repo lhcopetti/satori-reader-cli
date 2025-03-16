@@ -25,8 +25,6 @@ class FetchAllSatoriReaderContentTest {
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
         val token = SatoriReaderLoginToken(sessionToken = "the-token")
 
-        every { provider.login(credentials) } returns token
-
         val seriesA = SatoriReaderSeriesReference(link = "A")
         val seriesB = SatoriReaderSeriesReference(link = "B")
 
@@ -37,13 +35,12 @@ class FetchAllSatoriReaderContentTest {
 
         every { provider.fetchSeriesContent(any()) } returns contentA andThen contentB
 
-        val request = FetchAllSatoriReaderContentRequest(credentials = credentials)
-        val actual = fetchAllSatoriReaderContent.fetchAllContent(request)
+        val request = FetchAllSatoriReaderContentRequest(token = token)
+        val actual = fetchAllSatoriReaderContent.fetch(request)
 
         val expected = listOf(contentA, contentB)
         assertEquals(expected, actual)
 
-        verify { provider.login(credentials) }
         verify { provider.fetchSeries() }
         verify { provider.fetchSeriesContent(FetchSeriesContentRequest(token = token, series = seriesA)) }
         verify { provider.fetchSeriesContent(FetchSeriesContentRequest(token = token, series = seriesB)) }

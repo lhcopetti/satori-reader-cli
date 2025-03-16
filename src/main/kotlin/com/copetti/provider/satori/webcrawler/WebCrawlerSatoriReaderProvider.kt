@@ -1,14 +1,15 @@
 package com.copetti.provider.satori.webcrawler
 
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.core.usecase.ResetReadingProgressRequest
 import com.copetti.model.*
+import com.copetti.provider.satori.SatoriReaderWebConstants.SATORI_READER_API_URL
 import com.copetti.provider.satori.SatoriReaderWebConstants.SATORI_READER_URL
 import com.copetti.provider.satori.SatoriReaderWebConstants.SERIES_URL
 import com.copetti.provider.satori.SatoriReaderWebConstants.SIGNIN_URL
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -68,13 +69,14 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
 
     override fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent {
 
-        val response: String = OkHttpClient().newCall(
+        val response = OkHttpClient().newCall(
             Request.Builder()
                 .url(SATORI_READER_URL + request.series.link)
                 .header("Cookie", "SessionToken=${request.token.sessionToken}")
                 .build()
-        ).execute().body?.string() ?: ""
-        val document = Jsoup.parse(response)
+        ).execute()
+        val body: String = response.body?.string() ?: ""
+        val document = Jsoup.parse(body)
         val seriesTitle = document.getElementsByClass("series-detail-title-description-area")
             .first()
             ?.getElementsByTag("h1")
@@ -85,8 +87,14 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         return SatoriReaderSeriesContent(title = seriesTitle, episodes = episodes)
     }
 
-    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
-        throw NotImplementedError()
+    override fun resetReadingProgress(request: ResetEditionReadingProgressRequest) {
+        OkHttpClient().newCall(
+            Request.Builder()
+                .url(SATORI_READER_API_URL + request.edition.url + "/status")
+                .header("Cookie", "SessionToken=${request.token.sessionToken}")
+                .put("""{"type":"read-state","value":"0"}""".toRequestBody())
+                .build()
+        ).execute()
     }
 
     private fun mapEpisodes(episode: Element): SatoriReaderEpisode {

@@ -1,5 +1,6 @@
 package com.copetti.core.usecase
 
+import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.*
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -12,6 +13,8 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 class ListAllEpisodesTest {
+    @MockK
+    private lateinit var satoriReaderProvider: SatoriReaderProvider
 
     @MockK
     private lateinit var retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
@@ -26,6 +29,7 @@ class ListAllEpisodesTest {
             username = "username",
             password = "password"
         )
+        val token = SatoriReaderLoginToken(sessionToken = "token")
 
         val firstEpisodeAEdition =
             SatoriReaderEdition(name = "A:episode1", url = "urlA1", status = SatoriReaderStatus.COMPLETED)
@@ -43,6 +47,7 @@ class ListAllEpisodesTest {
 
         val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))
 
+        every { satoriReaderProvider.login(any()) } returns token
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
 
         val request = ListAllEpisodesRequest(credentials)
@@ -56,7 +61,8 @@ class ListAllEpisodesTest {
 
         assertEquals(expected, actual)
 
-        verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(credentials)) }
+        verify { satoriReaderProvider.login(request.credentials) }
+        verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token)) }
 
     }
 }

@@ -1,7 +1,7 @@
 package com.copetti.core.usecase
 
 import com.copetti.core.gateway.SatoriReaderProvider
-import com.copetti.model.SatoriReaderCredentials
+import com.copetti.model.*
 
 
 data class ResetReadingProgressRequest(
@@ -9,10 +9,24 @@ data class ResetReadingProgressRequest(
 )
 
 class ResetReadingProgress(
-    private val satoriReaderProvider: SatoriReaderProvider
+    private val satoriReaderProvider: SatoriReaderProvider,
+    private val fetchAllSatoriReaderContent: FetchAllSatoriReaderContent
 ) {
 
     fun reset(request: ResetReadingProgressRequest) {
-        satoriReaderProvider.resetReadingProgress(ResetReadingProgressRequest(credentials = request.credentials))
+        val token = satoriReaderProvider.login(request.credentials)
+        val retrieveRequest = FetchAllSatoriReaderContentRequest(token = token)
+        val allSeries = fetchAllSatoriReaderContent.fetch(retrieveRequest)
+
+        allSeries
+            .flatMap(SatoriReaderSeriesContent::episodes)
+            .flatMap(SatoriReaderEpisode::editions)
+            .filter { edition -> edition.status != SatoriReaderStatus.UNREAD }
+            .forEach { edition -> resetProgress(token, edition) }
     }
+
+    private fun resetProgress(token: SatoriReaderLoginToken, edition: SatoriReaderEdition) {
+        satoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token = token, edition = edition))
+    }
+
 }
