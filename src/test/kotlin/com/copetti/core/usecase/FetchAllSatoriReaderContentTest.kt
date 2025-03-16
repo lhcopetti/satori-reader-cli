@@ -12,13 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-class FetchAllContentTest {
+class FetchAllSatoriReaderContentTest {
 
     @MockK
     private lateinit var provider: SatoriReaderProvider
 
     @InjectMockKs
-    private lateinit var fetchAllContent: FetchAllContent
+    private lateinit var fetchAllSatoriReaderContent: FetchAllSatoriReaderContent
 
     @Test
     fun `should fetch all series content`() {
@@ -27,8 +27,8 @@ class FetchAllContentTest {
 
         every { provider.login(credentials) } returns token
 
-        val seriesA = SatoriReaderSeries(link = "A")
-        val seriesB = SatoriReaderSeries(link = "B")
+        val seriesA = SatoriReaderSeriesReference(link = "A")
+        val seriesB = SatoriReaderSeriesReference(link = "B")
 
         every { provider.fetchSeries() } returns listOf(seriesA, seriesB)
 
@@ -37,8 +37,8 @@ class FetchAllContentTest {
 
         every { provider.fetchSeriesContent(any()) } returns contentA andThen contentB
 
-        val request = FetchAllContentRequest(credentials = credentials)
-        val actual = fetchAllContent.fetchAllContent(request)
+        val request = FetchAllSatoriReaderContentRequest(credentials = credentials)
+        val actual = fetchAllSatoriReaderContent.fetchAllContent(request)
 
         val expected = listOf(contentA, contentB)
         assertEquals(expected, actual)

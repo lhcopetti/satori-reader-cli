@@ -14,10 +14,7 @@ import kotlin.test.assertEquals
 class RetrieveReadingProgressTest {
 
     @MockK
-    private lateinit var fetchAllContent: FetchAllContent
-
-    @MockK
-    private lateinit var selectPrimaryEdition: SelectPrimaryEdition
+    private lateinit var retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
 
     @InjectMockKs
     private lateinit var retrieveReadingProgress: RetrieveReadingProgress
@@ -26,26 +23,23 @@ class RetrieveReadingProgressTest {
     fun `should retrieve all series and select the primary edition for each episode`() {
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
 
-        val firstEpisodeA = SatoriReaderEpisode(title = "A:episode 1", editions = listOf())
         val firstEpisodeAEdition =
             SatoriReaderEdition(name = "A:episode1", url = "url", status = SatoriReaderStatus.COMPLETED)
-        every { selectPrimaryEdition.select(firstEpisodeA) } returns firstEpisodeAEdition
+        val firstEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 1", edition = firstEpisodeAEdition)
 
-        val secondEpisodeA = SatoriReaderEpisode(title = "A:episode 2", editions = listOf())
         val secondEpisodeAEdition =
             SatoriReaderEdition(name = "A:episode2", url = "url", status = SatoriReaderStatus.UNREAD)
-        every { selectPrimaryEdition.select(secondEpisodeA) } returns secondEpisodeAEdition
+        val secondEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 2", edition = secondEpisodeAEdition)
 
-        val seriesA = SatoriReaderSeriesContent(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
+        val seriesA = SatoriReaderSeries(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
 
-        val firstEpisodeB = SatoriReaderEpisode(title = "B:episode 1", editions = listOf())
         val firstEpisodeBEdition =
             SatoriReaderEdition(name = "B:episode1", url = "url", status = SatoriReaderStatus.STARTED)
-        every { selectPrimaryEdition.select(firstEpisodeB) } returns firstEpisodeBEdition
+        val firstEpisodeB = SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition)
 
-        val seriesB = SatoriReaderSeriesContent(title = "B", episodes = listOf(firstEpisodeB))
+        val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))
 
-        every { fetchAllContent.fetchAllContent(any()) } returns listOf(seriesA, seriesB)
+        every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
 
         val request = RetrieveReadingProgressRequest(credentials = credentials)
         val actual = retrieveReadingProgress.retrieve(request)
@@ -66,9 +60,6 @@ class RetrieveReadingProgressTest {
 
         assertEquals(expected, actual)
 
-        verify { fetchAllContent.fetchAllContent(FetchAllContentRequest(credentials)) }
-        verify { selectPrimaryEdition.select(firstEpisodeA) }
-        verify { selectPrimaryEdition.select(secondEpisodeA) }
-        verify { selectPrimaryEdition.select(firstEpisodeB) }
+        verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(credentials)) }
     }
 }

@@ -1,15 +1,15 @@
 package com.copetti.model
 
-data class SatoriReaderLoginToken(
-    val sessionToken: String
-)
-
 data class SatoriReaderCredentials(
     val username: String,
     val password: String
 )
 
-data class SatoriReaderSeries(
+data class SatoriReaderLoginToken(
+    val sessionToken: String
+)
+
+data class SatoriReaderSeriesReference(
     val link: String
 )
 
@@ -18,9 +18,20 @@ data class SatoriReaderSeriesContent(
     val episodes: List<SatoriReaderEpisode>
 )
 
+
 data class SatoriReaderEpisode(
     val title: String,
     val editions: List<SatoriReaderEdition>
+)
+
+data class SatoriReaderSeries(
+    val title: String,
+    val episodes: List<SatoriReaderPrimaryEditionEpisode>
+)
+
+data class SatoriReaderPrimaryEditionEpisode(
+    val title: String,
+    val edition: SatoriReaderEdition
 )
 
 data class SatoriReaderEdition(

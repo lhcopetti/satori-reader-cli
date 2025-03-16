@@ -1,11 +1,8 @@
 package com.copetti.core.usecase
 
-import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
-import com.copetti.model.SatoriReaderEdition
-import com.copetti.model.SatoriReaderSeriesContent
+import com.copetti.model.SatoriReaderSeries
 import com.copetti.model.SatoriReaderStatus
-import java.util.*
 
 data class ListAllEpisodesRequest(
     val credentials: SatoriReaderCredentials
@@ -20,55 +17,27 @@ data class EpisodeStatus(
 
 
 class ListAllEpisodes(
-    private val fetchAllContent: FetchAllContent
+    private val retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
 ) {
 
-    fun print(request: ListAllEpisodesRequest): List<EpisodeStatus> {
-        val providerRequest = FetchAllContentRequest(credentials = request.credentials)
-        val allSeries = fetchAllContent.fetchAllContent(providerRequest)
+    fun list(request: ListAllEpisodesRequest): List<EpisodeStatus> {
+        val providerRequest = RetrieveAllSatoriReaderSeriesRequest(credentials = request.credentials)
+        val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
         return listAllEpisodes(allSeries)
     }
 
-    private fun listAllEpisodes(allSeries: List<SatoriReaderSeriesContent>): List<EpisodeStatus> {
-        val episodes = mutableListOf<EpisodeStatus>()
-        for (series in allSeries) {
-            for (episode in series.episodes) {
-                val editionsByName = episode.editions.groupBy(SatoriReaderEdition::name)
-                val selectedEdition: SatoriReaderEdition = RANKED_EDITIONS
-                    .map { rankedEdition -> editionsByName[rankedEdition] }
-                    .first(Objects::nonNull)
-                    ?.first()
-                    ?: throw IllegalStateException("Could not find a ranked edition")
-
-                val episodeStatus = EpisodeStatus(
+    private fun listAllEpisodes(allSeries: List<SatoriReaderSeries>): List<EpisodeStatus> {
+        return allSeries.map { series ->
+            series.episodes.map { episode ->
+                EpisodeStatus(
                     title = series.title,
-                    edition = selectedEdition.name,
-                    status = selectedEdition.status,
-                    link = selectedEdition.url
+                    edition = episode.edition.name,
+                    status = episode.edition.status,
+                    link = episode.edition.url
                 )
-                episodes.add(episodeStatus)
             }
-
         }
-        return episodes
-    }
+            .flatten()
 
-    companion object {
-        private val RANKED_EDITIONS = listOf(
-            "HARDER (SFX)",
-            "HARDER",
-            "HARDER (VOICE ONLY)",
-            "WITH SOUND EFFECTS",
-            "STANDARD",
-            "NO SPACES",
-            "NO KATAKANA",
-            "MEDIUM",
-            "EASIER",
-            "EASIER (SFX)",
-            "EASIER (VOICE ONLY)",
-            "VOICE ONLY",
-            "WITH SPACES (20 MINUTES)",
-            "WITH SPACES (10 MINUTES)",
-        )
     }
 }

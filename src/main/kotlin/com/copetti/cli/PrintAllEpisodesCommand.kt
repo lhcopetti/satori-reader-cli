@@ -13,7 +13,7 @@ class PrintAllEpisodesCommand(
 
     override fun run() {
         val request = ListAllEpisodesRequest(credentials = config.credentials)
-        val allEpisodes = listAllEpisodes.print(request)
+        val allEpisodes = listAllEpisodes.list(request)
         allEpisodes.forEach { episode ->
             echo("${episode.title},${episode.edition},${episode.status},${episode.link}")
         }

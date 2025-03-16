@@ -8,7 +8,7 @@ interface SatoriReaderProvider {
 
     fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken
 
-    fun fetchSeries(): List<SatoriReaderSeries>
+    fun fetchSeries(): List<SatoriReaderSeriesReference>
 
     fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent
 

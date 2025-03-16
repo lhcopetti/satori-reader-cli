@@ -46,7 +46,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         throw IllegalStateException("Token not found in cookie header")
     }
 
-    override fun fetchSeries(): List<SatoriReaderSeries> {
+    override fun fetchSeries(): List<SatoriReaderSeriesReference> {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(SATORI_READER_URL + SERIES_URL)
@@ -62,7 +62,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         return linkElements
             .map { element -> element.attribute("href")?.value ?: "" }
             .filterNot(String::isEmpty)
-            .map { link -> SatoriReaderSeries(link = link) }
+            .map { link -> SatoriReaderSeriesReference(link = link) }
             .toList()
     }
 
