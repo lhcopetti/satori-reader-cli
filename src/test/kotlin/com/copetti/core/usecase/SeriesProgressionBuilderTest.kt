@@ -48,4 +48,33 @@ class SeriesProgressionBuilderTest {
 
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun `should escape quotes and backlashes`() {
+        val series = SeriesProgression(
+            title = "series title with \"quotes\" and \\backlashes\\ ! Be careful",
+            link = "series-link",
+            episodes = listOf(
+                EpisodeProgression(
+                    title = "episode title with \"quotes\" and \\backlashes\\ ! Be careful",
+                    link = "link-episode1",
+                    status = SatoriReaderStatus.COMPLETED
+                ),
+                EpisodeProgression(
+                    title = "2-episode",
+                    link = "link-episode2",
+                    status = SatoriReaderStatus.COMPLETED
+                ),
+            )
+        )
+
+        val expected = """
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | series title with \"quotes\" and \\backlashes\\ ! Be careful")](series-link)
+        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | episode title with \"quotes\" and \\backlashes\\ ! Be careful")](link-episode1)
+        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | 2-episode")](link-episode2)
+        """.trimIndent().replace("\n", "")
+        val actual = seriesProgressionBuilder.build(series)
+
+        assertEquals(expected, actual)
+    }
 }

@@ -8,17 +8,24 @@ class SeriesProgressionBuilder {
 
         val sb = StringBuilder()
 
-        val seriesCell = buildCell(color = "000000", link = series.link, tooltip = "Series | ${series.title}")
+        val escapedSeriesTitle = escapeBacklashesAndQuotes(series.title)
+
+        val seriesCell = buildCell(color = "000000", link = series.link, tooltip = "Series | $escapedSeriesTitle")
         sb.append(seriesCell)
 
         series.episodes.forEach { episode ->
             val color = getCellColor(status = episode.status)
+            val escapedEpisodeTitle = escapeBacklashesAndQuotes(episode.title)
             val episodeCell =
-                buildCell(color = color, link = episode.link, tooltip = "${series.title} | ${episode.title}")
+                buildCell(color = color, link = episode.link, tooltip = "$escapedSeriesTitle | $escapedEpisodeTitle")
             sb.append(episodeCell)
         }
 
         return sb.toString()
+    }
+
+    private fun escapeBacklashesAndQuotes(title: String): String {
+        return title.replace("\\", "\\\\").replace("\"", "\\\"")
     }
 
     private fun getCellColor(status: SatoriReaderStatus) = when (status) {
