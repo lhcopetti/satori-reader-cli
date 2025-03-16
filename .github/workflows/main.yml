@@ -1,0 +1,31 @@
+name: Upload Coverage to Codecov
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-upload-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build and run tests with coverage
+        run: |
+          mvn clean install
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: target/site/kover/report.xml
+          fail_ci_if_error: true
+          verbose: true
