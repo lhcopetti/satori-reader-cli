@@ -57,7 +57,7 @@ class PrintAllEpisodeStatusTest {
         every { satoriReaderProvider.login(any()) } returns token
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
 
-        val request = ListAllEpisodesRequest(credentials)
+        val request = PrintAllEpisodesRequest(credentials)
         val actual = printAllEpisodeStatus.print(request)
 
         val expected = """

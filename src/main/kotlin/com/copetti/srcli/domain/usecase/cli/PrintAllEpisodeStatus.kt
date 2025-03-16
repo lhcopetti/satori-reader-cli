@@ -7,7 +7,7 @@ import com.copetti.srcli.domain.model.SatoriReaderStatus
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
 
-data class ListAllEpisodesRequest(
+data class PrintAllEpisodesRequest(
     val credentials: SatoriReaderCredentials
 )
 
@@ -24,7 +24,7 @@ class PrintAllEpisodeStatus(
     private val retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries,
 ) {
 
-    fun print(request: ListAllEpisodesRequest): String {
+    fun print(request: PrintAllEpisodesRequest): String {
         val token = satoriReaderProvider.login(request.credentials)
         val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
         val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
