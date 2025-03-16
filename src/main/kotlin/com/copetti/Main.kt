@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     val retrieveReadingProgress = RetrieveReadingProgress(webcrawlerSatoriReaderProvider, retrieveAllSatoriReaderSeries)
     val generateProgressDashboard = GenerateProgressDashboard(
         retrieveReadingProgress = retrieveReadingProgress,
-        buildProgressDashboard = BuildProgressDashboard(GetProgressStatusMarker())
+        buildProgressDashboard = BuildProgressDashboard(SeriesProgressionBuilder())
     )
     val updateReadmeProgress = UpdateReadmeProgress(generateProgressDashboard = generateProgressDashboard)
 

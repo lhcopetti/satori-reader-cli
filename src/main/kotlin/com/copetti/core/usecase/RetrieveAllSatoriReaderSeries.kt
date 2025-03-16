@@ -21,6 +21,7 @@ class RetrieveAllSatoriReaderSeries(
     private fun mapSeries(series: SatoriReaderSeriesContent): SatoriReaderSeries {
         return SatoriReaderSeries(
             title = series.title,
+            link = series.link,
             episodes = series.episodes.map(this::mapEpisode)
         )
     }

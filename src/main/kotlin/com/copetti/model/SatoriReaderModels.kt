@@ -27,6 +27,7 @@ data class SatoriReaderEpisode(
 
 data class SatoriReaderSeries(
     val title: String,
+    val link: String,
     val episodes: List<SatoriReaderPrimaryEditionEpisode>
 )
 

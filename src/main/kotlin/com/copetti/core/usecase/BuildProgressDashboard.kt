@@ -11,7 +11,7 @@ data class BuildProgressDashboardRequest(
 
 
 class BuildProgressDashboard(
-    private val getProgressStatusMarker: GetProgressStatusMarker
+    private val seriesProgressionBuilder: SeriesProgressionBuilder
 ) {
 
 
@@ -24,9 +24,10 @@ class BuildProgressDashboard(
         sb.appendLine()
 
         val dashboard = request.progression.sortedBy { series -> series.title }
-            .joinToString(separator = " ", transform = getProgressStatusMarker::build)
+            .joinToString(separator = " ", transform = seriesProgressionBuilder::build)
         sb.appendLine(dashboard)
 
+        sb.appendLine()
         sb.appendLine("### Series progression: ${getSeriesProgression(request)}")
         sb.appendLine("### Episodes progression: ${getEpisodesProgression(request)}")
 

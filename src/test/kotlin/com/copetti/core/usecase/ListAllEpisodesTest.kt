@@ -44,13 +44,13 @@ class ListAllEpisodesTest {
             SatoriReaderEdition(name = "A:episode2", urlPath = "urlA2", link = "", status = SatoriReaderStatus.UNREAD)
         val secondEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 2", edition = secondEpisodeAEdition)
 
-        val seriesA = SatoriReaderSeries(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
+        val seriesA = SatoriReaderSeries(title = "A", link = "linkA", episodes = listOf(firstEpisodeA, secondEpisodeA))
 
         val firstEpisodeBEdition =
             SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val firstEpisodeB = SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition)
 
-        val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))
+        val seriesB = SatoriReaderSeries(title = "B", link= "linkB", episodes = listOf(firstEpisodeB))
 
         every { satoriReaderProvider.login(any()) } returns token
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)

@@ -8,39 +8,43 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
-class GetProgressStatusMarkerTest {
+class SeriesProgressionBuilderTest {
 
     @InjectMockKs
-    private lateinit var getProgressStatusMarker: GetProgressStatusMarker
+    private lateinit var seriesProgressionBuilder: SeriesProgressionBuilder
 
 
     @Test
     fun `should build the progress cells correctly`() {
         val series = SeriesProgression(
             title = "the-series-title",
+            link = "series-link",
             episodes = listOf(
                 EpisodeProgression(
                     title = "1-episode",
+                    link = "link-episode1",
                     status = SatoriReaderStatus.COMPLETED
                 ),
                 EpisodeProgression(
                     title = "2-episode",
+                    link = "link-episode2",
                     status = SatoriReaderStatus.STARTED
                 ),
                 EpisodeProgression(
                     title = "3-episode",
+                    link = "link-episode3",
                     status = SatoriReaderStatus.UNREAD
                 )
             )
         )
 
         val expected = """
-        [![#000000](https://placehold.co/15x15/000000/.png?text=. "the-series-title")](https://youtube.com)
-        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "1-episode")](https://google.com)
-        [![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "2-episode")](https://google.com)
-        [![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "3-episode")](https://google.com)
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | the-series-title")](series-link)
+        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "the-series-title | 1-episode")](link-episode1)
+        [![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "the-series-title | 2-episode")](link-episode2)
+        [![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "the-series-title | 3-episode")](link-episode3)
         """.trimIndent().replace("\n", "")
-        val actual = getProgressStatusMarker.build(series)
+        val actual = seriesProgressionBuilder.build(series)
 
         assertEquals(expected, actual)
     }

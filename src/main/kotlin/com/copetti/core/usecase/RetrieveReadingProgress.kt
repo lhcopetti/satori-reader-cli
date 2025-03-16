@@ -6,12 +6,14 @@ import com.copetti.model.SatoriReaderStatus
 
 data class SeriesProgression(
     val title: String,
+    val link: String,
     val episodes: List<EpisodeProgression>
 )
 
 data class EpisodeProgression(
     val title: String,
-    val status: SatoriReaderStatus
+    val status: SatoriReaderStatus,
+    val link: String
 )
 
 data class RetrieveReadingProgressRequest(
@@ -30,10 +32,12 @@ class RetrieveReadingProgress(
         return allSeries.map { series ->
             SeriesProgression(
                 title = series.title,
+                link = series.link,
                 episodes = series.episodes.map { episode ->
                     EpisodeProgression(
                         title = episode.title,
-                        status = episode.edition.status
+                        link = episode.edition.link,
+                        status = episode.edition.status,
                     )
                 }
             )

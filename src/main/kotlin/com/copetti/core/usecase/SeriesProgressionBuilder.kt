@@ -2,18 +2,19 @@ package com.copetti.core.usecase
 
 import com.copetti.model.SatoriReaderStatus
 
-class GetProgressStatusMarker {
+class SeriesProgressionBuilder {
 
     fun build(series: SeriesProgression): String {
 
         val sb = StringBuilder()
 
-        val seriesCell = buildCell(color = "000000", link = "https://youtube.com", tooltip = series.title)
+        val seriesCell = buildCell(color = "000000", link = series.link, tooltip = "Series | ${series.title}")
         sb.append(seriesCell)
 
         series.episodes.forEach { episode ->
             val color = getCellColor(status = episode.status)
-            val episodeCell = buildCell(color = color, link = "https://google.com", tooltip = episode.title)
+            val episodeCell =
+                buildCell(color = color, link = episode.link, tooltip = "${series.title} | ${episode.title}")
             sb.append(episodeCell)
         }
 

@@ -28,28 +28,43 @@ class RetrieveAllSatoriReaderSeriesTest {
 
         val firstEpisodeA = SatoriReaderEpisode(title = "A:episode 1", editions = listOf())
         val firstEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode1", urlPath = "url", link = "link", status = SatoriReaderStatus.COMPLETED)
+            SatoriReaderEdition(
+                name = "A:episode1",
+                urlPath = "url-edition1A",
+                link = "link-edition1A",
+                status = SatoriReaderStatus.COMPLETED
+            )
         every { selectPrimaryEdition.select(firstEpisodeA) } returns firstEpisodeAEdition
 
         val secondEpisodeA = SatoriReaderEpisode(title = "A:episode 2", editions = listOf())
         val secondEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode2", urlPath = "url", link = "link", status = SatoriReaderStatus.UNREAD)
+            SatoriReaderEdition(
+                name = "A:episode2",
+                urlPath = "url-edition2A",
+                link = "link-edition2A",
+                status = SatoriReaderStatus.UNREAD
+            )
         every { selectPrimaryEdition.select(secondEpisodeA) } returns secondEpisodeAEdition
 
         val seriesA = SatoriReaderSeriesContent(
             title = "A",
-            link = "link",
+            link = "link-seriesA",
             episodes = listOf(firstEpisodeA, secondEpisodeA)
         )
 
         val firstEpisodeB = SatoriReaderEpisode(title = "B:episode 1", editions = listOf())
         val firstEpisodeBEdition =
-            SatoriReaderEdition(name = "B:episode1", urlPath = "url", link = "link", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(
+                name = "B:episode1",
+                urlPath = "url",
+                link = "link-edition1B",
+                status = SatoriReaderStatus.STARTED
+            )
         every { selectPrimaryEdition.select(firstEpisodeB) } returns firstEpisodeBEdition
 
         val seriesB = SatoriReaderSeriesContent(
             title = "B",
-            link = "link",
+            link = "link-seriesB",
             episodes = listOf(firstEpisodeB)
         )
 
@@ -60,13 +75,13 @@ class RetrieveAllSatoriReaderSeriesTest {
 
         val expected = listOf(
             SatoriReaderSeries(
-                title = "A", episodes = listOf(
+                title = "A", link = "link-seriesA", episodes = listOf(
                     SatoriReaderPrimaryEditionEpisode(title = "A:episode 1", edition = firstEpisodeAEdition),
                     SatoriReaderPrimaryEditionEpisode(title = "A:episode 2", edition = secondEpisodeAEdition),
                 )
             ),
             SatoriReaderSeries(
-                title = "B", episodes = listOf(
+                title = "B", link = "link-seriesB", episodes = listOf(
                     SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition),
                 )
             )
