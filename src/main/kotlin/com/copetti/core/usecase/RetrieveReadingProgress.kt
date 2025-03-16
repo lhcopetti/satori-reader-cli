@@ -3,7 +3,7 @@ package com.copetti.core.usecase
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderEpisode
-import com.copetti.model.SatoriReaderSeries
+import com.copetti.model.SatoriReaderSeriesContent
 import com.copetti.model.SatoriReaderStatus
 
 data class SeriesProgression(
@@ -31,7 +31,7 @@ class RetrieveReadingProgress(
         return allSeries.map(this::mapSeries)
     }
 
-    private fun mapSeries(series: SatoriReaderSeries): SeriesProgression {
+    private fun mapSeries(series: SatoriReaderSeriesContent): SeriesProgression {
         return SeriesProgression(
             title = series.title,
             episodes = series.episodes.map(this::mapEpisode)

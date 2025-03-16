@@ -3,7 +3,7 @@ package com.copetti.core.usecase
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderEdition
-import com.copetti.model.SatoriReaderSeries
+import com.copetti.model.SatoriReaderSeriesContent
 import com.copetti.model.SatoriReaderStatus
 import java.util.*
 
@@ -29,7 +29,7 @@ class ListAllEpisodes(
         return listAllEpisodes(allSeries)
     }
 
-    private fun listAllEpisodes(allSeries: List<SatoriReaderSeries>): List<EpisodeStatus> {
+    private fun listAllEpisodes(allSeries: List<SatoriReaderSeriesContent>): List<EpisodeStatus> {
         val episodes = mutableListOf<EpisodeStatus>()
         for (series in allSeries) {
             for (episode in series.episodes) {

@@ -3,7 +3,7 @@ package com.copetti.core.usecase
 import com.copetti.core.gateway.SatoriReaderProvider
 import com.copetti.model.SatoriReaderCredentials
 import com.copetti.model.SatoriReaderEdition
-import com.copetti.model.SatoriReaderSeries
+import com.copetti.model.SatoriReaderSeriesContent
 
 data class ListAllSeriesRequest(
     val credentials: SatoriReaderCredentials
@@ -26,9 +26,9 @@ class ListAllSeries(
         return listAllEpisodes(allSeries)
     }
 
-    private fun listAllEpisodes(satoriReaderSeries: List<SatoriReaderSeries>): List<SeriesWithRankedEditions> {
+    private fun listAllEpisodes(satoriReaderSeryWithEpisodes: List<SatoriReaderSeriesContent>): List<SeriesWithRankedEditions> {
         val allSeries = mutableListOf<SeriesWithRankedEditions>()
-        for (series in satoriReaderSeries) {
+        for (series in satoriReaderSeryWithEpisodes) {
             val editions = mutableListOf<SatoriReaderEdition>()
             for (episode in series.episodes) {
                 val selectedEdition = selectPrimaryEdition.select(episode)

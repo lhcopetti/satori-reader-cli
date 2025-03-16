@@ -167,10 +167,6 @@
           <groupId>io.mockk</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>kotlinx-coroutines-core</artifactId>
-          <groupId>org.jetbrains.kotlinx</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>kotlin-reflect</artifactId>
           <groupId>org.jetbrains.kotlin</groupId>
         </exclusion>
@@ -179,7 +175,6 @@
   </dependencies>
   <properties>
     <kotlin.code.style>official</kotlin.code.style>
-    <selenium.version>4.29.0</selenium.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
   </properties>

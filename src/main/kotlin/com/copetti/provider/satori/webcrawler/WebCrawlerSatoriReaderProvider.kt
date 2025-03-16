@@ -15,17 +15,39 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
-    override fun fetchAllSeries(request: FetchAllSeriesRequest): List<SatoriReaderSeries> {
-        val token = login(request.credentials)
-        val seriesLinks = fetchSeriesLinks()
-        return seriesLinks.map { link -> mapEpisodes(token, link) }
+    override fun login(credentials: SatoriReaderCredentials): SatoriReaderLoginToken {
+        val formBody = FormBody.Builder()
+            .add("username", credentials.username)
+            .add("password", credentials.password)
+            .build()
+
+        val signInRequest = Request.Builder()
+            .url(SATORI_READER_URL + SIGNIN_URL)
+            .post(formBody)
+            .build()
+
+        val client = OkHttpClient.Builder()
+            .followRedirects(false)
+            .build()
+
+        val loginResponse = client.newCall(signInRequest).execute()
+        val token = getSessionTokenFromResponse(loginResponse)
+        return SatoriReaderLoginToken(sessionToken = token)
     }
 
-    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
-        throw NotImplementedError()
+    private fun getSessionTokenFromResponse(currentResponse: Response): String {
+        val cookie = currentResponse.header("Set-Cookie")
+        val headers: List<String> = cookie?.split(";") ?: listOf()
+        for (header in headers) {
+            val comp = header.split("=")
+            if (comp[0] == "SessionToken")
+                return comp[1]
+        }
+
+        throw IllegalStateException("Token not found in cookie header")
     }
 
-    private fun fetchSeriesLinks(): List<String> {
+    override fun fetchSeries(): List<SatoriReaderSeries> {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(SATORI_READER_URL + SERIES_URL)
@@ -41,15 +63,27 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         return linkElements
             .map { element -> element.attribute("href")?.value ?: "" }
             .filterNot(String::isEmpty)
+            .map { link -> SatoriReaderSeries(link = link) }
             .toList()
     }
 
-    private fun mapEpisodes(token: String, seriesLink: String): SatoriReaderSeries {
+
+    override fun fetchAllSeries(request: FetchAllSeriesRequest): List<SatoriReaderSeriesContent> {
+        val token = login(request.credentials)
+        val seriesLinks = fetchSeries()
+        return seriesLinks.map { link -> mapEpisodes(token, link) }
+    }
+
+    override fun resetReadingProgress(request: ResetReadingProgressRequest) {
+        throw NotImplementedError()
+    }
+
+    private fun mapEpisodes(token: SatoriReaderLoginToken, seriesLink: SatoriReaderSeries): SatoriReaderSeriesContent {
 
         val response: String = OkHttpClient().newCall(
             Request.Builder()
-                .url(SATORI_READER_URL + seriesLink)
-                .header("Cookie", "SessionToken=$token")
+                .url(SATORI_READER_URL + seriesLink.link)
+                .header("Cookie", "SessionToken=${token.sessionToken}")
                 .build()
         ).execute().body?.string() ?: ""
         val document = Jsoup.parse(response)
@@ -60,7 +94,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         val episodes = document.getElementsByClass("series-detail-grid-item")
             .map { episode -> mapEpisodes(episode) }
 
-        return SatoriReaderSeries(title = seriesTitle, episodes = episodes)
+        return SatoriReaderSeriesContent(title = seriesTitle, episodes = episodes)
     }
 
     private fun mapEpisodes(episode: Element): SatoriReaderEpisode {
@@ -88,37 +122,6 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
                     status = status
                 )
             } ?: listOf()
-    }
-
-    private fun login(credentials: SatoriReaderCredentials): String {
-        val formBody = FormBody.Builder()
-            .add("username", credentials.username)
-            .add("password", credentials.password)
-            .build()
-
-        val signInRequest = Request.Builder()
-            .url(SATORI_READER_URL + SIGNIN_URL)
-            .post(formBody)
-            .build()
-
-        val client = OkHttpClient.Builder()
-            .followRedirects(false)
-            .build()
-
-        val response = client.newCall(signInRequest).execute()
-        return getSessionTokenFromResponse(response)
-    }
-
-    private fun getSessionTokenFromResponse(currentResponse: Response): String {
-        val cookie = currentResponse.header("Set-Cookie")
-        val headers: List<String> = cookie?.split(";") ?: listOf()
-        for (header in headers) {
-            val comp = header.split("=")
-            if (comp[0] == "SessionToken")
-                return comp[1]
-        }
-
-        throw IllegalStateException("Token not found in cookie header")
     }
 
 }
