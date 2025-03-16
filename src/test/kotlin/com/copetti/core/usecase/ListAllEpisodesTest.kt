@@ -32,17 +32,22 @@ class ListAllEpisodesTest {
         val token = SatoriReaderLoginToken(sessionToken = "token")
 
         val firstEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode1", url = "urlA1", status = SatoriReaderStatus.COMPLETED)
+            SatoriReaderEdition(
+                name = "A:episode1",
+                urlPath = "urlA1",
+                link = "",
+                status = SatoriReaderStatus.COMPLETED
+            )
         val firstEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 1", edition = firstEpisodeAEdition)
 
         val secondEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode2", url = "urlA2", status = SatoriReaderStatus.UNREAD)
+            SatoriReaderEdition(name = "A:episode2", urlPath = "urlA2", link = "", status = SatoriReaderStatus.UNREAD)
         val secondEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 2", edition = secondEpisodeAEdition)
 
         val seriesA = SatoriReaderSeries(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
 
         val firstEpisodeBEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "urlB1", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val firstEpisodeB = SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition)
 
         val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))

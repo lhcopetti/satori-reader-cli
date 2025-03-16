@@ -28,22 +28,35 @@ class ResetReadingProgressTest {
         val token = SatoriReaderLoginToken(sessionToken = "token")
 
         val firstEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode1", url = "urlA1", status = SatoriReaderStatus.COMPLETED)
+            SatoriReaderEdition(
+                name = "A:episode1",
+                urlPath = "urlA1",
+                link = "link",
+                status = SatoriReaderStatus.COMPLETED
+            )
         val firstEpisodeA = SatoriReaderEpisode(title = "A:episode 1", editions = listOf(firstEpisodeAEdition))
-        val seriesA = SatoriReaderSeriesContent(title = "A", episodes = listOf(firstEpisodeA))
+        val seriesA = SatoriReaderSeriesContent(
+            title = "A",
+            link = "link",
+            episodes = listOf(firstEpisodeA)
+        )
 
         val episodeBFirstEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "urlB1", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val episodeBSecondEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "urlB1", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val episodeBThirdEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "urlB1", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val firstEpisodeB = SatoriReaderEpisode(
             title = "B:episode 1",
             editions = listOf(episodeBFirstEdition, episodeBSecondEdition, episodeBThirdEdition)
         )
 
-        val seriesB = SatoriReaderSeriesContent(title = "B", episodes = listOf(firstEpisodeB))
+        val seriesB = SatoriReaderSeriesContent(
+            title = "B",
+            link = "link",
+            episodes = listOf(firstEpisodeB)
+        )
 
         every { satoriReaderProvider.login(credentials) } returns token
         every { satoriReaderProvider.resetReadingProgress(any()) } returns Unit

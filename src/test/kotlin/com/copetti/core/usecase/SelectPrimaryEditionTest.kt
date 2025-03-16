@@ -18,8 +18,8 @@ class SelectPrimaryEditionTest {
     @Test
     fun `should select the harder edition`() {
 
-        val easier = SatoriReaderEdition("EASIER", "the-url", SatoriReaderStatus.COMPLETED)
-        val harder = SatoriReaderEdition("HARDER", "the-url", SatoriReaderStatus.COMPLETED)
+        val easier = SatoriReaderEdition("EASIER", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val harder = SatoriReaderEdition("HARDER", "the-url", "link", SatoriReaderStatus.COMPLETED)
         val episode = SatoriReaderEpisode(
             title = "the-title",
             editions = listOf(easier, harder)
@@ -32,10 +32,10 @@ class SelectPrimaryEditionTest {
     @Test
     fun `should select the harder edition that contains sfx`() {
 
-        val easier = SatoriReaderEdition("EASIER", "the-url", SatoriReaderStatus.COMPLETED)
-        val harder = SatoriReaderEdition("HARDER", "the-url", SatoriReaderStatus.COMPLETED)
-        val easierSfx = SatoriReaderEdition("EASIER (SFX)", "the-url", SatoriReaderStatus.COMPLETED)
-        val harderSfx = SatoriReaderEdition("HARDER (SFX)", "the-url", SatoriReaderStatus.COMPLETED)
+        val easier = SatoriReaderEdition("EASIER", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val harder = SatoriReaderEdition("HARDER", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val easierSfx = SatoriReaderEdition("EASIER (SFX)", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val harderSfx = SatoriReaderEdition("HARDER (SFX)", "the-url", "link", SatoriReaderStatus.COMPLETED)
         val episode = SatoriReaderEpisode(
             title = "the-title",
             editions = listOf(easier, harder, easierSfx, harderSfx)
@@ -48,8 +48,8 @@ class SelectPrimaryEditionTest {
     @Test
     fun `should select the medium edition`() {
 
-        val easier = SatoriReaderEdition("EASIER", "the-url", SatoriReaderStatus.COMPLETED)
-        val medium = SatoriReaderEdition("MEDIUM", "the-url", SatoriReaderStatus.COMPLETED)
+        val easier = SatoriReaderEdition("EASIER", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val medium = SatoriReaderEdition("MEDIUM", "the-url", "link", SatoriReaderStatus.COMPLETED)
         val episode = SatoriReaderEpisode(
             title = "the-title",
             editions = listOf(easier, medium)
@@ -62,8 +62,8 @@ class SelectPrimaryEditionTest {
     @Test
     fun `should select the edition with sound effects`() {
 
-        val withSoundEffects = SatoriReaderEdition("With Sound Effects", "the-url", SatoriReaderStatus.COMPLETED)
-        val voiceOnly = SatoriReaderEdition("Voice Only", "the-url", SatoriReaderStatus.COMPLETED)
+        val withSoundEffects = SatoriReaderEdition("With Sound Effects", "the-url", "link", SatoriReaderStatus.COMPLETED)
+        val voiceOnly = SatoriReaderEdition("Voice Only", "the-url", "link", SatoriReaderStatus.COMPLETED)
         val episode = SatoriReaderEpisode(
             title = "the-title",
             editions = listOf(withSoundEffects, voiceOnly)

@@ -28,22 +28,30 @@ class RetrieveAllSatoriReaderSeriesTest {
 
         val firstEpisodeA = SatoriReaderEpisode(title = "A:episode 1", editions = listOf())
         val firstEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode1", url = "url", status = SatoriReaderStatus.COMPLETED)
+            SatoriReaderEdition(name = "A:episode1", urlPath = "url", link = "link", status = SatoriReaderStatus.COMPLETED)
         every { selectPrimaryEdition.select(firstEpisodeA) } returns firstEpisodeAEdition
 
         val secondEpisodeA = SatoriReaderEpisode(title = "A:episode 2", editions = listOf())
         val secondEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode2", url = "url", status = SatoriReaderStatus.UNREAD)
+            SatoriReaderEdition(name = "A:episode2", urlPath = "url", link = "link", status = SatoriReaderStatus.UNREAD)
         every { selectPrimaryEdition.select(secondEpisodeA) } returns secondEpisodeAEdition
 
-        val seriesA = SatoriReaderSeriesContent(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
+        val seriesA = SatoriReaderSeriesContent(
+            title = "A",
+            link = "link",
+            episodes = listOf(firstEpisodeA, secondEpisodeA)
+        )
 
         val firstEpisodeB = SatoriReaderEpisode(title = "B:episode 1", editions = listOf())
         val firstEpisodeBEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "url", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "url", link = "link", status = SatoriReaderStatus.STARTED)
         every { selectPrimaryEdition.select(firstEpisodeB) } returns firstEpisodeBEdition
 
-        val seriesB = SatoriReaderSeriesContent(title = "B", episodes = listOf(firstEpisodeB))
+        val seriesB = SatoriReaderSeriesContent(
+            title = "B",
+            link = "link",
+            episodes = listOf(firstEpisodeB)
+        )
 
         every { fetchAllSatoriReaderContent.fetch(any()) } returns listOf(seriesA, seriesB)
 

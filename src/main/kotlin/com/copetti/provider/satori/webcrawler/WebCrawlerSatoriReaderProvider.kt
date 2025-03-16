@@ -63,7 +63,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         return linkElements
             .map { element -> element.attribute("href")?.value ?: "" }
             .filterNot(String::isEmpty)
-            .map { link -> SatoriReaderSeriesReference(link = link) }
+            .map { link -> SatoriReaderSeriesReference(link = SATORI_READER_URL + link) }
             .toList()
     }
 
@@ -71,7 +71,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
 
         val response = OkHttpClient().newCall(
             Request.Builder()
-                .url(SATORI_READER_URL + request.series.link)
+                .url(request.series.link)
                 .header("Cookie", "SessionToken=${request.token.sessionToken}")
                 .build()
         ).execute()
@@ -84,13 +84,13 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         val episodes = document.getElementsByClass("series-detail-grid-item")
             .map { episode -> mapEpisodes(episode) }
 
-        return SatoriReaderSeriesContent(title = seriesTitle, episodes = episodes)
+        return SatoriReaderSeriesContent(title = seriesTitle, link = request.series.link, episodes = episodes)
     }
 
     override fun resetReadingProgress(request: ResetEditionReadingProgressRequest) {
         OkHttpClient().newCall(
             Request.Builder()
-                .url(SATORI_READER_API_URL + request.edition.url + "/status")
+                .url(SATORI_READER_API_URL + request.edition.urlPath + "/status")
                 .header("Cookie", "SessionToken=${request.token.sessionToken}")
                 .put("""{"type":"read-state","value":"0"}""".toRequestBody())
                 .build()
@@ -118,7 +118,8 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
                     .first { st -> st.toString().equals(columns[1].text(), ignoreCase = true) }
                 SatoriReaderEdition(
                     name = name,
-                    url = url,
+                    urlPath = url,
+                    link = SATORI_READER_URL + url,
                     status = status
                 )
             } ?: listOf()

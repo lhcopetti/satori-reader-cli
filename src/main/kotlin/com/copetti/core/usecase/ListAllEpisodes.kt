@@ -36,7 +36,7 @@ class ListAllEpisodes(
                     title = series.title,
                     edition = episode.edition.name,
                     status = episode.edition.status,
-                    link = episode.edition.url
+                    link = episode.edition.urlPath
                 )
             }
         }

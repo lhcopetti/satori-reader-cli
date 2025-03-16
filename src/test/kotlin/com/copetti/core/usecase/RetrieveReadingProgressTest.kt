@@ -28,17 +28,17 @@ class RetrieveReadingProgressTest {
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
 
         val firstEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode1", url = "url", status = SatoriReaderStatus.COMPLETED)
+            SatoriReaderEdition(name = "A:episode1", urlPath = "url", link= "link", status = SatoriReaderStatus.COMPLETED)
         val firstEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 1", edition = firstEpisodeAEdition)
 
         val secondEpisodeAEdition =
-            SatoriReaderEdition(name = "A:episode2", url = "url", status = SatoriReaderStatus.UNREAD)
+            SatoriReaderEdition(name = "A:episode2", urlPath = "url", link="link", status = SatoriReaderStatus.UNREAD)
         val secondEpisodeA = SatoriReaderPrimaryEditionEpisode(title = "A:episode 2", edition = secondEpisodeAEdition)
 
         val seriesA = SatoriReaderSeries(title = "A", episodes = listOf(firstEpisodeA, secondEpisodeA))
 
         val firstEpisodeBEdition =
-            SatoriReaderEdition(name = "B:episode1", url = "url", status = SatoriReaderStatus.STARTED)
+            SatoriReaderEdition(name = "B:episode1", urlPath = "url", link = "link", status = SatoriReaderStatus.STARTED)
         val firstEpisodeB = SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition)
 
         val seriesB = SatoriReaderSeries(title = "B", episodes = listOf(firstEpisodeB))

@@ -30,8 +30,8 @@ class FetchAllSatoriReaderContentTest {
 
         every { provider.fetchSeries() } returns listOf(seriesA, seriesB)
 
-        val contentA = SatoriReaderSeriesContent(title = "title A", episodes = listOf())
-        val contentB = SatoriReaderSeriesContent(title = "title B", episodes = listOf())
+        val contentA = SatoriReaderSeriesContent(title = "title A", link = "link", episodes = listOf())
+        val contentB = SatoriReaderSeriesContent(title = "title B", link = "link", episodes = listOf())
 
         every { provider.fetchSeriesContent(any()) } returns contentA andThen contentB
 

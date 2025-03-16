@@ -19,16 +19,16 @@ class BuildProgressDashboard(
 
         val sb = StringBuilder()
 
-        sb.appendLine("### Series progression: ${getSeriesProgression(request)}")
-        sb.appendLine("### Episodes progression: ${getEpisodesProgression(request)}")
         sb.appendLine()
-
         sb.appendLine("## Progression Dashboard")
         sb.appendLine()
 
         val dashboard = request.progression.sortedBy { series -> series.title }
-            .joinToString(separator = " ", transform = this::mapProgress)
+            .joinToString(separator = " ", transform = getProgressStatusMarker::build)
         sb.appendLine(dashboard)
+
+        sb.appendLine("### Series progression: ${getSeriesProgression(request)}")
+        sb.appendLine("### Episodes progression: ${getEpisodesProgression(request)}")
 
         return sb.toString()
     }
@@ -50,16 +50,6 @@ class BuildProgressDashboard(
 
     private fun isEpisodeComplete(episodeProgression: EpisodeProgression) =
         episodeProgression.status == SatoriReaderStatus.COMPLETED
-
-    private fun mapProgress(progress: SeriesProgression): String {
-        val completedMarker = getProgressStatusMarker.get(SatoriReaderStatus.COMPLETED)
-        val unreadMarker = getProgressStatusMarker.get(SatoriReaderStatus.UNREAD)
-
-        val completed =
-            completedMarker.repeat(progress.episodes.count { e -> e.status == SatoriReaderStatus.COMPLETED })
-        val unread = unreadMarker.repeat(progress.episodes.count { e -> e.status != SatoriReaderStatus.COMPLETED })
-        return completed + unread
-    }
 
     companion object {
         private val NUMBER_FORMATTER: NumberFormat = NumberFormat.getNumberInstance(Locale.US)
