@@ -39,11 +39,14 @@ class SeriesProgressionBuilderTest {
         )
 
         val expected = """
-        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | the-series-title")](series-link)
-        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "the-series-title | 1-episode")](link-episode1)
-        [![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "the-series-title | 2-episode")](link-episode2)
-        [![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "the-series-title | 3-episode")](link-episode3)
-        """.trimIndent().replace("\n", "")
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | the-series-title")](series-link)[![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "the-series-title | 1-episode")](link-episode1)[![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "the-series-title | 2-episode")](link-episode2)[![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "the-series-title | 3-episode")](link-episode3)
+        
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "")]() - Series Title |
+        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "")]() - Completed |
+        [![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "")]() - Started |
+        [![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "")]() - Unread |
+        *(hover over a cell for more information or click on it to go to the series/episode)*
+        """.trimIndent()
         val actual = seriesProgressionBuilder.build(series)
 
         assertEquals(expected, actual)
@@ -69,10 +72,14 @@ class SeriesProgressionBuilderTest {
         )
 
         val expected = """
-        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | series title with \"quotes\" and \\backlashes\\ ! Be careful")](series-link)
-        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | episode title with \"quotes\" and \\backlashes\\ ! Be careful")](link-episode1)
-        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | 2-episode")](link-episode2)
-        """.trimIndent().replace("\n", "")
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "Series | series title with \"quotes\" and \\backlashes\\ ! Be careful")](series-link)[![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | episode title with \"quotes\" and \\backlashes\\ ! Be careful")](link-episode1)[![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "series title with \"quotes\" and \\backlashes\\ ! Be careful | 2-episode")](link-episode2)
+        
+        [![#000000](https://placehold.co/15x15/000000/.png?text=. "")]() - Series Title |
+        [![#00ff00](https://placehold.co/15x15/00ff00/.png?text=. "")]() - Completed |
+        [![#ffff00](https://placehold.co/15x15/ffff00/.png?text=. "")]() - Started |
+        [![#ff0000](https://placehold.co/15x15/ff0000/.png?text=. "")]() - Unread |
+        *(hover over a cell for more information or click on it to go to the series/episode)*
+        """.trimIndent()
         val actual = seriesProgressionBuilder.build(series)
 
         assertEquals(expected, actual)

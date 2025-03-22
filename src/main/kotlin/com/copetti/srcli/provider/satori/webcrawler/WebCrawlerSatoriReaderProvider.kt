@@ -77,7 +77,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
     }
 
     override fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent {
-        logger.info { "SATORI_READER_FETCH_SERIES_CONTENT_REQUEST | series: ${request.series}" }
+        logger.info { "SATORI_READER_FETCH_SERIES_CONTENT_REQUEST | link: ${request.series.link}" }
 
         val response = OkHttpClient().newCall(
             Request.Builder()
