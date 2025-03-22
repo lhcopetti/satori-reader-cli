@@ -7,3 +7,17 @@
 Satori Reader offers a variety of stories at different difficulty levels to help learners improve their Japanese. Having used the platform for a while, I decided to go through all the stories again. To streamline the process, I built this tool to reset progress across series and episodes while providing a clear way to track my advancement.
 
 {{PROGRESSION_DASHBOARD}}
+
+##### Build
+
+```
+mvn clean install
+```
+
+# Available commands
+
+```
+java -jar target/*.jar --username <username> reset-reading-progress # Resets progress for all episodes
+java -jar target/*.jar --username <username> print-all-episodes # Prints all episodes status in CSV format
+java -jar target/*.jar --username <username> update-readme-progress # Updates the readme of this project (used by CI)
+```
