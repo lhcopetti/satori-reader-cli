@@ -5,12 +5,12 @@ import com.copetti.srcli.domain.model.*
 
 interface SatoriReaderProvider {
 
-    fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken
+    suspend fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken
 
-    fun fetchSeries(): List<SatoriReaderSeriesReference>
+    suspend fun fetchSeries(): List<SatoriReaderSeriesReference>
 
-    fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent
+    suspend fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent
 
-    fun resetReadingProgress(request: ResetEditionReadingProgressRequest)
+    suspend fun resetReadingProgress(request: ResetEditionReadingProgressRequest)
 
 }

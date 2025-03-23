@@ -39,3 +39,4 @@ build/
 .DS_Store
 
 config.properties
+/dependency-reduced-pom.xml

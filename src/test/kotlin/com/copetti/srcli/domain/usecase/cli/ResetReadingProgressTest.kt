@@ -2,14 +2,16 @@ package com.copetti.srcli.domain.usecase.cli
 
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
-import com.copetti.srcli.domain.usecase.FetchAllSatoriReaderContent
-import io.mockk.every
+import com.copetti.srcli.provider.DelayedSatoriReaderProvider
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.time.Duration
 
 @ExtendWith(MockKExtension::class)
 class ResetReadingProgressTest {
@@ -17,14 +19,11 @@ class ResetReadingProgressTest {
     @MockK
     private lateinit var satoriReaderProvider: SatoriReaderProvider
 
-    @MockK
-    private lateinit var fetchAllSatoriReaderContent: FetchAllSatoriReaderContent
-
     @InjectMockKs
     private lateinit var resetReadingProgress: ResetReadingProgress
 
     @Test
-    fun `should reset the progress for all episodes, series and editions`() {
+    fun `should reset the progress for all episodes, series and editions`() = runTest {
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
         val token = SatoriReaderLoginToken(sessionToken = "token")
 
@@ -59,24 +58,58 @@ class ResetReadingProgressTest {
             episodes = listOf(firstEpisodeB)
         )
 
-        every { satoriReaderProvider.login(credentials) } returns token
-        every { satoriReaderProvider.resetReadingProgress(any()) } returns Unit
-        every { fetchAllSatoriReaderContent.fetch(any()) } returns listOf(seriesA, seriesB)
+        val referenceSeriesA = SatoriReaderSeriesReference(link = "linkToA")
+        val referenceSeriesB = SatoriReaderSeriesReference(link = "linkToB")
+
+        coEvery { satoriReaderProvider.fetchSeries() } returns listOf(referenceSeriesA, referenceSeriesB)
+        coEvery {
+            satoriReaderProvider.fetchSeriesContent(
+                FetchSeriesContentRequest(
+                    token,
+                    referenceSeriesA
+                )
+            )
+        } returns seriesA
+        coEvery {
+            satoriReaderProvider.fetchSeriesContent(
+                FetchSeriesContentRequest(
+                    token,
+                    referenceSeriesB
+                )
+            )
+        } returns seriesB
+
+        coEvery { satoriReaderProvider.login(credentials) } returns token
+        coEvery { satoriReaderProvider.resetReadingProgress(any()) } returns Unit
 
         resetReadingProgress.reset(ResetReadingProgressRequest(credentials = credentials))
 
-        verify {
+        coVerify {
             satoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token, firstEpisodeAEdition))
         }
-        verify {
+        coVerify {
             satoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token, episodeBFirstEdition))
         }
-        verify {
+        coVerify {
             satoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token, episodeBSecondEdition))
         }
-        verify {
+        coVerify {
             satoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token, episodeBThirdEdition))
         }
+    }
+
+    @Test
+    fun `should parallelize execution for resetting progress`() = runTest(timeout = Duration.parse("1s")) {
+        val delayedSatoriReaderProvider = DelayedSatoriReaderProvider(
+            numberOfEpisodes = 10,
+            numberOfEditionsPerEpisode = 30,
+            delayMs = 1
+        )
+        val resetReadingProgress = ResetReadingProgress(delayedSatoriReaderProvider)
+
+        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+
+        resetReadingProgress.reset(ResetReadingProgressRequest(credentials = credentials))
     }
 
 }

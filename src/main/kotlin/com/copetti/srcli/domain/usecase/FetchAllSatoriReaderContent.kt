@@ -3,8 +3,11 @@ package com.copetti.srcli.domain.usecase
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.FetchSeriesContentRequest
 import com.copetti.srcli.domain.model.SatoriReaderLoginToken
-import com.copetti.srcli.domain.model.SatoriReaderSeriesContent
 import com.copetti.srcli.domain.model.SatoriReaderSeriesReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 
 
 data class FetchAllSatoriReaderContentRequest(
@@ -15,13 +18,18 @@ class FetchAllSatoriReaderContent(
     private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
-    fun fetch(request: FetchAllSatoriReaderContentRequest): List<SatoriReaderSeriesContent> {
-        return satoriReaderProvider.fetchSeries()
-            .map { series -> fetchSeriesContent(request, series) }
+    fun fetch(request: FetchAllSatoriReaderContentRequest) = runBlocking {
+        satoriReaderProvider.fetchSeries()
+            .map { reference -> fetchContentForSeries(request, reference) }
+            .awaitAll()
     }
 
-    private fun fetchSeriesContent(request: FetchAllSatoriReaderContentRequest, series: SatoriReaderSeriesReference) =
-        satoriReaderProvider.fetchSeriesContent(
-            FetchSeriesContentRequest(token = request.token, series = series)
-        )
+    private fun CoroutineScope.fetchContentForSeries(
+        request: FetchAllSatoriReaderContentRequest,
+        reference: SatoriReaderSeriesReference
+    ) = async {
+        val fetchContentRequest = FetchSeriesContentRequest(token = request.token, series = reference)
+        satoriReaderProvider.fetchSeriesContent(fetchContentRequest)
+    }
+
 }

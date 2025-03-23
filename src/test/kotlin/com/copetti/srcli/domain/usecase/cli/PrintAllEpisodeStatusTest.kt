@@ -4,6 +4,8 @@ import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -52,9 +54,9 @@ class PrintAllEpisodeStatusTest {
             SatoriReaderEdition(name = "B:episode1", urlPath = "urlB1", link = "", status = SatoriReaderStatus.STARTED)
         val firstEpisodeB = SatoriReaderPrimaryEditionEpisode(title = "B:episode 1", edition = firstEpisodeBEdition)
 
-        val seriesB = SatoriReaderSeries(title = "B", link= "linkB", episodes = listOf(firstEpisodeB))
+        val seriesB = SatoriReaderSeries(title = "B", link = "linkB", episodes = listOf(firstEpisodeB))
 
-        every { satoriReaderProvider.login(any()) } returns token
+        coEvery { satoriReaderProvider.login(any()) } returns token
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
 
         val request = PrintAllEpisodesRequest(credentials)
@@ -68,7 +70,7 @@ class PrintAllEpisodeStatusTest {
 
         assertEquals(expected, actual)
 
-        verify { satoriReaderProvider.login(request.credentials) }
+        coVerify { satoriReaderProvider.login(request.credentials) }
         verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token)) }
 
     }

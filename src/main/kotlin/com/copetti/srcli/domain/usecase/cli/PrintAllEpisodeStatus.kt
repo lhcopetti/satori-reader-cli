@@ -6,6 +6,7 @@ import com.copetti.srcli.domain.model.SatoriReaderSeries
 import com.copetti.srcli.domain.model.SatoriReaderStatus
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
+import kotlinx.coroutines.runBlocking
 
 data class PrintAllEpisodesRequest(
     val credentials: SatoriReaderCredentials
@@ -25,11 +26,13 @@ class PrintAllEpisodeStatus(
 ) {
 
     fun print(request: PrintAllEpisodesRequest): String {
-        val token = satoriReaderProvider.login(request.credentials)
-        val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
-        val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
-        return retrieveAllEpisodesStatus(allSeries).joinToString(separator = System.lineSeparator()) { episode ->
-            "${episode.title},${episode.edition},${episode.status},${episode.link}"
+        return runBlocking {
+            val token = satoriReaderProvider.login(request.credentials)
+            val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
+            val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
+            retrieveAllEpisodesStatus(allSeries).joinToString(separator = System.lineSeparator()) { episode ->
+                "${episode.title},${episode.edition},${episode.status},${episode.link}"
+            }
         }
     }
 

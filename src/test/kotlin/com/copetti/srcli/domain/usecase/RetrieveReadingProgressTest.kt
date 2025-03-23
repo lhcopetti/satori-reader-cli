@@ -2,11 +2,14 @@ package com.copetti.srcli.domain.usecase
 
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
@@ -24,7 +27,7 @@ class RetrieveReadingProgressTest {
     private lateinit var retrieveReadingProgress: RetrieveReadingProgress
 
     @Test
-    fun `should retrieve all series and select the primary edition for each episode`() {
+    fun `should retrieve all series and select the primary edition for each episode`() = runTest {
         val token = SatoriReaderLoginToken(sessionToken = "token")
         val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
 
@@ -60,7 +63,7 @@ class RetrieveReadingProgressTest {
         val seriesB = SatoriReaderSeries(title = "B", link = "linkB", episodes = listOf(firstEpisodeB))
 
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
-        every { satoriReaderProvider.login(credentials) } returns token
+        coEvery { satoriReaderProvider.login(credentials) } returns token
 
         val request = RetrieveReadingProgressRequest(credentials = credentials)
         val actual = retrieveReadingProgress.retrieve(request)
@@ -93,7 +96,7 @@ class RetrieveReadingProgressTest {
 
         assertEquals(expected, actual)
 
-        verify { satoriReaderProvider.login(request.credentials) }
+        coVerify { satoriReaderProvider.login(request.credentials) }
         verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token = token)) }
     }
 }

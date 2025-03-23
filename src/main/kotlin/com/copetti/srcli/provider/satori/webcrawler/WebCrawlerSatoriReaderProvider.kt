@@ -19,7 +19,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
 
     private val logger = KotlinLogging.logger { }
 
-    override fun login(credentials: SatoriReaderCredentials): SatoriReaderLoginToken {
+    override suspend fun login(credentials: SatoriReaderCredentials): SatoriReaderLoginToken {
         logger.info { "SATORI_READER_LOGIN_REQUEST" }
         val formBody = FormBody.Builder()
             .add("username", credentials.username)
@@ -53,7 +53,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         throw IllegalStateException("Token not found in cookie header")
     }
 
-    override fun fetchSeries(): List<SatoriReaderSeriesReference> {
+    override suspend fun fetchSeries(): List<SatoriReaderSeriesReference> {
         logger.info { "SATORI_READER_FETCH_SERIES_REQUEST" }
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -76,7 +76,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
             .also { logger.info { "SATORI_READER_FETCH_SERIES | seriesCount: ${it.size}" } }
     }
 
-    override fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent {
+    override suspend fun fetchSeriesContent(request: FetchSeriesContentRequest): SatoriReaderSeriesContent {
         logger.info { "SATORI_READER_FETCH_SERIES_CONTENT_REQUEST | link: ${request.series.link}" }
 
         val response = OkHttpClient().newCall(
@@ -99,7 +99,7 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
         return SatoriReaderSeriesContent(title = seriesTitle, link = request.series.link, episodes = episodes)
     }
 
-    override fun resetReadingProgress(request: ResetEditionReadingProgressRequest) {
+    override suspend fun resetReadingProgress(request: ResetEditionReadingProgressRequest) {
         logger.info { "SATORI_READER_RESET_PROGRESS_REQUEST | editionUrl: ${request.edition.urlPath}" }
 
         OkHttpClient().newCall(
