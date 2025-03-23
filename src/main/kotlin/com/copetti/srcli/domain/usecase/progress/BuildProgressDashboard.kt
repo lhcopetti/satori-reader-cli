@@ -21,7 +21,7 @@ class BuildProgressDashboard(
         val sb = StringBuilder()
 
         sb.appendLine()
-        sb.appendLine("## Progression Dashboard")
+        sb.appendLine("## Progression Dashboard - updates daily")
         sb.appendLine()
 
         val dashboard = request.progression.sortedBy { series -> series.title }

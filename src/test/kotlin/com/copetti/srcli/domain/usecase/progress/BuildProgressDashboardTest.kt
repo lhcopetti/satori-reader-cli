@@ -38,7 +38,7 @@ class BuildProgressDashboardTest {
 
         val expected = """
 
-            ## Progression Dashboard
+            ## Progression Dashboard - updates daily
 
             X
             
@@ -68,7 +68,7 @@ class BuildProgressDashboardTest {
 
         val expected = """
 
-            ## Progression Dashboard
+            ## Progression Dashboard - updates daily
 
             X X X
 
