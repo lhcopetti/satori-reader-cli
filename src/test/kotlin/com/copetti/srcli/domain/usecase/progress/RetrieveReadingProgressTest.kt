@@ -1,7 +1,9 @@
-package com.copetti.srcli.domain.usecase
+package com.copetti.srcli.domain.usecase.progress
 
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
+import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
+import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

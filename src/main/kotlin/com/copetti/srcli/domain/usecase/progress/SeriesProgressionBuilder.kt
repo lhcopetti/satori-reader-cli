@@ -1,4 +1,4 @@
-package com.copetti.srcli.domain.usecase
+package com.copetti.srcli.domain.usecase.progress
 
 class SeriesProgressionBuilder(
     private val progressionCellBuilder: ProgressionCellBuilder

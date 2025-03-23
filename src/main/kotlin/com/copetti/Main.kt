@@ -8,6 +8,8 @@ import com.copetti.srcli.domain.usecase.*
 import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodeStatus
 import com.copetti.srcli.domain.usecase.cli.ResetReadingProgress
 import com.copetti.srcli.domain.usecase.cli.UpdateReadmeProgress
+import com.copetti.srcli.domain.usecase.file.FileSystem
+import com.copetti.srcli.domain.usecase.progress.*
 import com.copetti.srcli.provider.satori.ThrottledSatoriReaderProvider
 import com.copetti.srcli.provider.satori.webcrawler.WebCrawlerSatoriReaderProvider
 import com.github.ajalt.clikt.core.main
@@ -29,7 +31,7 @@ fun main(args: Array<String>) {
             progressionCellBuilder
         )
     )
-    val updateReadmeProgress = UpdateReadmeProgress(generateProgressDashboard = generateProgressDashboard)
+    val updateReadmeProgress = UpdateReadmeProgress(generateProgressDashboard, FileSystem())
 
 
     SatoriReaderCliCommand()

@@ -14,7 +14,7 @@ Satori Reader offers a variety of stories at different difficulty levels to help
 mvn clean install
 ```
 
-# Available commands
+##### Available commands
 
 ```
 java -jar target/*.jar --username <username> reset-reading-progress # Resets progress for all episodes

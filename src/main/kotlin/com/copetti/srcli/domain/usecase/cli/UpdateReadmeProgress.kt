@@ -1,9 +1,9 @@
 package com.copetti.srcli.domain.usecase.cli
 
 import com.copetti.srcli.domain.model.SatoriReaderCredentials
-import com.copetti.srcli.domain.usecase.GenerateProgressDashboard
-import com.copetti.srcli.domain.usecase.GenerateProgressDashboardRequest
-import java.nio.file.Files
+import com.copetti.srcli.domain.usecase.file.FileSystem
+import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboard
+import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboardRequest
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
@@ -13,19 +13,20 @@ data class UpdateReadmeRequest(
 )
 
 class UpdateReadmeProgress(
-    private val generateProgressDashboard: GenerateProgressDashboard
+    private val generateProgressDashboard: GenerateProgressDashboard,
+    private val fileSystem: FileSystem
 ) {
 
     fun update(request: UpdateReadmeRequest) {
 
-        val readMeTemplateContent = Files.readString(Path(README_TEMPLATE))
+        val readMeTemplateContent = fileSystem.readFile(Path(README_TEMPLATE))
 
         val readMeContent = readMeTemplateContent
             .replace(DASHBOARD_TEMPLATE_KEY, getProgressionDashboard(request))
             .replace(TODAY_TEMPLATE_KEY, getDateToday())
 
-        Files.writeString(Path(README), readMeContent)
-        Files.writeString(Path(getHistoryReadme()), readMeContent)
+        fileSystem.writeFile(Path(README), readMeContent)
+        fileSystem.writeFile(Path(getHistoryReadme()), readMeContent)
     }
 
     private fun getHistoryReadme() = "$HISTORY_FOLDER/README-${getDateToday()}.md"

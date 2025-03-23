@@ -1,4 +1,4 @@
-package com.copetti.srcli.domain.usecase
+package com.copetti.srcli.domain.usecase.progress
 
 import com.copetti.srcli.domain.model.SatoriReaderCredentials
 

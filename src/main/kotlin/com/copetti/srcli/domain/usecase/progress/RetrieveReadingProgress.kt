@@ -1,8 +1,10 @@
-package com.copetti.srcli.domain.usecase
+package com.copetti.srcli.domain.usecase.progress
 
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.SatoriReaderCredentials
 import com.copetti.srcli.domain.model.SatoriReaderStatus
+import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
+import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
 import kotlinx.coroutines.runBlocking
 
 data class SeriesProgression(
