@@ -14,16 +14,20 @@ import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 
 fun main(args: Array<String>) {
-    val satoriReaderProvider = ThrottledSatoriReaderProvider(WebCrawlerSatoriReaderProvider() )
+    val satoriReaderProvider = ThrottledSatoriReaderProvider(WebCrawlerSatoriReaderProvider())
     val fetchAllSatoriReaderContent = FetchAllSatoriReaderContent(satoriReaderProvider)
     val selectPrimaryEdition = SelectPrimaryEdition()
     val retrieveAllSatoriReaderSeries = RetrieveAllSatoriReaderSeries(fetchAllSatoriReaderContent, selectPrimaryEdition)
     val resetReadingProgress = ResetReadingProgress(satoriReaderProvider)
     val printAllEpisodeStatus = PrintAllEpisodeStatus(satoriReaderProvider, retrieveAllSatoriReaderSeries)
     val retrieveReadingProgress = RetrieveReadingProgress(satoriReaderProvider, retrieveAllSatoriReaderSeries)
+    val progressionCellBuilder = ProgressionCellBuilder()
     val generateProgressDashboard = GenerateProgressDashboard(
         retrieveReadingProgress = retrieveReadingProgress,
-        buildProgressDashboard = BuildProgressDashboard(SeriesProgressionBuilder())
+        buildProgressDashboard = BuildProgressDashboard(
+            SeriesProgressionBuilder(progressionCellBuilder),
+            progressionCellBuilder
+        )
     )
     val updateReadmeProgress = UpdateReadmeProgress(generateProgressDashboard = generateProgressDashboard)
 

@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -14,14 +15,23 @@ class BuildProgressDashboardTest {
 
     @MockK
     private lateinit var seriesProgressionBuilder: SeriesProgressionBuilder
+    @MockK
+    private lateinit var progressionCellBuilder: ProgressionCellBuilder
 
     @InjectMockKs
     private lateinit var buildProgressDashboard: BuildProgressDashboard
 
+    @BeforeEach
+    fun setUp() {
+        every { seriesProgressionBuilder.build(any()) } returns "X"
+        every { progressionCellBuilder.buildSeriesCell(any(), any()) } returns "S"
+        every { progressionCellBuilder.buildStatusCell(eq(SatoriReaderStatus.COMPLETED), any(), any()) } returns "Completed"
+        every { progressionCellBuilder.buildStatusCell(eq(SatoriReaderStatus.STARTED), any(), any()) } returns "Started"
+        every { progressionCellBuilder.buildStatusCell(eq(SatoriReaderStatus.UNREAD), any(), any()) } returns "Unread"
+    }
+
     @Test
     fun `should build the progress dashboard correctly`() {
-
-        every { seriesProgressionBuilder.build(any()) } returns "X"
 
         val progress = createSeriesProgression(title = "the-title", completedCount = 2, unreadCount = 2)
         val request = BuildProgressDashboardRequest(listOf(progress))
@@ -31,7 +41,13 @@ class BuildProgressDashboardTest {
             ## Progression Dashboard
 
             X
-
+            
+            S - Series Title |
+            Completed - Completed |
+            Started - Started |
+            Unread - Unread |
+            *(hover over a cell for more information or click on it to go to the series/episode)*
+            
             ### Series progression: (0/1) - 0.00%
             ### Episodes progression: (2/4) - 50.00%
 
@@ -50,14 +66,18 @@ class BuildProgressDashboardTest {
         )
         val request = BuildProgressDashboardRequest(progress)
 
-        every { seriesProgressionBuilder.build(any()) } returns "X"
-
         val expected = """
 
             ## Progression Dashboard
 
             X X X
 
+            S - Series Title |
+            Completed - Completed |
+            Started - Started |
+            Unread - Unread |
+            *(hover over a cell for more information or click on it to go to the series/episode)*
+            
             ### Series progression: (0/3) - 0.00%
             ### Episodes progression: (9/27) - 33.33%
 

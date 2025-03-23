@@ -11,7 +11,8 @@ data class BuildProgressDashboardRequest(
 
 
 class BuildProgressDashboard(
-    private val seriesProgressionBuilder: SeriesProgressionBuilder
+    private val seriesProgressionBuilder: SeriesProgressionBuilder,
+    private val progressionCellBuilder: ProgressionCellBuilder
 ) {
 
 
@@ -26,6 +27,13 @@ class BuildProgressDashboard(
         val dashboard = request.progression.sortedBy { series -> series.title }
             .joinToString(separator = " ", transform = seriesProgressionBuilder::build)
         sb.appendLine(dashboard)
+
+        sb.appendLine()
+        sb.appendLine("${progressionCellBuilder.buildSeriesCell()} - Series Title |")
+        sb.appendLine("${progressionCellBuilder.buildStatusCell(SatoriReaderStatus.COMPLETED)} - Completed |")
+        sb.appendLine("${progressionCellBuilder.buildStatusCell(SatoriReaderStatus.STARTED)} - Started |")
+        sb.appendLine("${progressionCellBuilder.buildStatusCell(SatoriReaderStatus.UNREAD)} - Unread |")
+        sb.appendLine("*(hover over a cell for more information or click on it to go to the series/episode)*")
 
         sb.appendLine()
         sb.appendLine("### Series progression: ${getSeriesProgression(request)}")
