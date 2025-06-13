@@ -5,4 +5,8 @@ data class LoginApplicationCredentials(
     val password: String
 ) : ApplicationCredentials
 
+data class TokenApplicationCredentials(
+    val token: String
+) : ApplicationCredentials
+
 sealed interface ApplicationCredentials

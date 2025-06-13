@@ -3,6 +3,7 @@ package com.copetti.srcli.domain.usecase.cli
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.LoginApplicationCredentials
 import com.copetti.srcli.domain.model.SatoriReaderLoginToken
+import com.copetti.srcli.domain.model.TokenApplicationCredentials
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
@@ -24,7 +25,7 @@ class AuthenticateUserTest {
     private lateinit var authenticateUser: AuthenticateUser
 
     @Test
-    fun `should authenticate user successfully`() = runTest {
+    fun `should authenticate user successfully with login credentials`() = runTest {
         // Given
         val credentials = LoginApplicationCredentials(username = "test-user", password = "test-pass")
         val expectedToken = SatoriReaderLoginToken(sessionToken = "test-token")
@@ -36,6 +37,20 @@ class AuthenticateUserTest {
         // Then
         assertEquals(expectedToken, result)
         coVerify { satoriReaderProvider.login(credentials) }
+    }
+
+    @Test
+    fun `should return token directly when using token credentials`() = runTest {
+        // Given
+        val credentials = TokenApplicationCredentials(token = "existing-token")
+        val expectedToken = SatoriReaderLoginToken(sessionToken = "existing-token")
+
+        // When
+        val result = authenticateUser.authenticate(credentials)
+
+        // Then
+        assertEquals(expectedToken, result)
+        coVerify(exactly = 0) { satoriReaderProvider.login(any()) }
     }
 
     @Test
@@ -52,4 +67,5 @@ class AuthenticateUserTest {
         assertEquals(expectedError, actualError)
         coVerify { satoriReaderProvider.login(credentials) }
     }
+
 }
