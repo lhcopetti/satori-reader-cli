@@ -9,7 +9,7 @@ class ResetReadingProgressCommand(
     private val resetReadingProgress: ResetReadingProgress
 ) : CliktCommand() {
 
-    private val config by requireObject<SatoriReaderCliContext>()
+    private val config by requireObject<ApplicationCliContext>()
 
     override fun run() {
         val request = ResetReadingProgressRequest(credentials = config.credentials)

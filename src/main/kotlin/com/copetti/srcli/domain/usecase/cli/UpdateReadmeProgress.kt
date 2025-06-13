@@ -1,6 +1,6 @@
 package com.copetti.srcli.domain.usecase.cli
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.ApplicationCredentials
 import com.copetti.srcli.domain.usecase.file.FileSystem
 import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboard
 import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboardRequest
@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
 
 data class UpdateReadmeRequest(
-    val credentials: SatoriReaderCredentials
+    val credentials: ApplicationCredentials
 )
 
 class UpdateReadmeProgress(

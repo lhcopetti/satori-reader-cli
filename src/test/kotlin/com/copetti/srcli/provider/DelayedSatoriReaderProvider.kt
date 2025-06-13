@@ -10,7 +10,7 @@ class DelayedSatoriReaderProvider(
     private val delayMs: Long
 ) : SatoriReaderProvider {
 
-    override suspend fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken {
+    override suspend fun login(request: LoginApplicationCredentials): SatoriReaderLoginToken {
         delay(delayMs)
         return SatoriReaderLoginToken(sessionToken = "")
     }

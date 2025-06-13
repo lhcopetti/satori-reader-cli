@@ -1,9 +1,9 @@
 package com.copetti.srcli.domain.usecase.progress
 
-import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
+import com.copetti.srcli.domain.usecase.cli.AuthenticateUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
 class RetrieveReadingProgressTest {
 
     @MockK
-    private lateinit var satoriReaderProvider: SatoriReaderProvider
+    private lateinit var authenticateUser: AuthenticateUser
 
     @MockK
     private lateinit var retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
@@ -31,7 +31,7 @@ class RetrieveReadingProgressTest {
     @Test
     fun `should retrieve all series and select the primary edition for each episode`() = runTest {
         val token = SatoriReaderLoginToken(sessionToken = "token")
-        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+        val credentials = LoginApplicationCredentials(username = "the-username", password = "the-password")
 
         val firstEpisodeAEdition =
             SatoriReaderEdition(
@@ -65,7 +65,7 @@ class RetrieveReadingProgressTest {
         val seriesB = SatoriReaderSeries(title = "B", link = "linkB", episodes = listOf(firstEpisodeB))
 
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
-        coEvery { satoriReaderProvider.login(credentials) } returns token
+        coEvery { authenticateUser.authenticate(credentials) } returns token
 
         val request = RetrieveReadingProgressRequest(credentials = credentials)
         val actual = retrieveReadingProgress.retrieve(request)
@@ -98,7 +98,7 @@ class RetrieveReadingProgressTest {
 
         assertEquals(expected, actual)
 
-        coVerify { satoriReaderProvider.login(request.credentials) }
+        coVerify { authenticateUser.authenticate(request.credentials) }
         verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token = token)) }
     }
 }

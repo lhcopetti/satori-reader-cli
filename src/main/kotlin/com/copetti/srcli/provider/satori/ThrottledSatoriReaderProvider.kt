@@ -12,7 +12,7 @@ class ThrottledSatoriReaderProvider(
 
     @OptIn(ObsoleteCoroutinesApi::class)
     private val throttler = ticker(delayMillis = minimumDelayMs)
-    override suspend fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken {
+    override suspend fun login(request: LoginApplicationCredentials): SatoriReaderLoginToken {
         throttler.receive()
         return satoriReaderProvider.login(request)
     }

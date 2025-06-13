@@ -2,7 +2,6 @@ package com.copetti.srcli.domain.usecase.cli
 
 import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
-import com.copetti.srcli.domain.usecase.FetchAllSatoriReaderContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.launch
@@ -10,16 +9,17 @@ import kotlinx.coroutines.runBlocking
 
 
 data class ResetReadingProgressRequest(
-    val credentials: SatoriReaderCredentials
+    val credentials: ApplicationCredentials
 )
 
 class ResetReadingProgress(
+    private val authenticateUser: AuthenticateUser,
     private val satoriReaderProvider: SatoriReaderProvider
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun reset(request: ResetReadingProgressRequest) = runBlocking {
-        val token = satoriReaderProvider.login(request.credentials)
+        val token = authenticateUser.authenticate(request.credentials)
         val allSeries = satoriReaderProvider.fetchSeries()
 
         val unreadEditionsChannel = produce {

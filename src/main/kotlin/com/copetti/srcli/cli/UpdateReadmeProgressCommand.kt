@@ -9,7 +9,7 @@ class UpdateReadmeProgressCommand(
     private val updateReadmeProgress: UpdateReadmeProgress
 ) : CliktCommand() {
 
-    private val config by requireObject<SatoriReaderCliContext>()
+    private val config by requireObject<ApplicationCliContext>()
 
     override fun run() {
         val request = UpdateReadmeRequest(credentials = config.credentials)

@@ -19,11 +19,11 @@ class WebCrawlerSatoriReaderProvider : SatoriReaderProvider {
 
     private val logger = KotlinLogging.logger { }
 
-    override suspend fun login(credentials: SatoriReaderCredentials): SatoriReaderLoginToken {
+    override suspend fun login(request: LoginApplicationCredentials): SatoriReaderLoginToken {
         logger.info { "SATORI_READER_LOGIN_REQUEST" }
         val formBody = FormBody.Builder()
-            .add("username", credentials.username)
-            .add("password", credentials.password)
+            .add("username", request.username)
+            .add("password", request.password)
             .build()
 
         val signInRequest = Request.Builder()

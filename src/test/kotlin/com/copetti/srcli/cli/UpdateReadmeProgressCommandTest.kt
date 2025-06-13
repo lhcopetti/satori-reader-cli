@@ -1,6 +1,6 @@
 package com.copetti.srcli.cli
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.LoginApplicationCredentials
 import com.copetti.srcli.domain.usecase.cli.UpdateReadmeProgress
 import com.copetti.srcli.domain.usecase.cli.UpdateReadmeRequest
 import com.github.ajalt.clikt.core.context
@@ -26,11 +26,11 @@ class UpdateReadmeProgressCommandTest {
 
     @Test
     fun `should call the use case correctly`() {
-        val credentials = SatoriReaderCredentials(username = "username", password = "password")
+        val credentials = LoginApplicationCredentials(username = "username", password = "password")
 
         every { updateReadmeProgress.update(any()) } returns Unit
         val result = updateReadingProgressCommand
-            .context { obj = SatoriReaderCliContext(credentials = credentials) }
+            .context { obj = ApplicationCliContext(credentials = credentials) }
             .test()
 
         assertEquals("", result.output)

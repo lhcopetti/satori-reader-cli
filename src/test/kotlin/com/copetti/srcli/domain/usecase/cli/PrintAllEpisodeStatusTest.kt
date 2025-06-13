@@ -1,6 +1,5 @@
 package com.copetti.srcli.domain.usecase.cli
 
-import com.copetti.srcli.domain.gateway.SatoriReaderProvider
 import com.copetti.srcli.domain.model.*
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
@@ -18,7 +17,7 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 class PrintAllEpisodeStatusTest {
     @MockK
-    private lateinit var satoriReaderProvider: SatoriReaderProvider
+    private lateinit var authenticateUser: AuthenticateUser
 
     @MockK
     private lateinit var retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
@@ -26,10 +25,9 @@ class PrintAllEpisodeStatusTest {
     @InjectMockKs
     private lateinit var printAllEpisodeStatus: PrintAllEpisodeStatus
 
-
     @Test
     fun `should retrieve all series and list all the episodes`() {
-        val credentials = SatoriReaderCredentials(
+        val credentials = LoginApplicationCredentials(
             username = "username",
             password = "password"
         )
@@ -56,7 +54,7 @@ class PrintAllEpisodeStatusTest {
 
         val seriesB = SatoriReaderSeries(title = "B", link = "linkB", episodes = listOf(firstEpisodeB))
 
-        coEvery { satoriReaderProvider.login(any()) } returns token
+        coEvery { authenticateUser.authenticate(any()) } returns token
         every { retrieveAllSatoriReaderSeries.retrieve(any()) } returns listOf(seriesA, seriesB)
 
         val request = PrintAllEpisodesRequest(credentials)
@@ -70,8 +68,7 @@ class PrintAllEpisodeStatusTest {
 
         assertEquals(expected, actual)
 
-        coVerify { satoriReaderProvider.login(request.credentials) }
+        coVerify { authenticateUser.authenticate(request.credentials) }
         verify { retrieveAllSatoriReaderSeries.retrieve(RetrieveAllSatoriReaderSeriesRequest(token)) }
-
     }
 }

@@ -1,6 +1,6 @@
 package com.copetti.srcli.cli
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.LoginApplicationCredentials
 import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodeStatus
 import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodesRequest
 import com.github.ajalt.clikt.core.context
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class PrintAllEpisodesCommandTest {
 
-
     @MockK
     private lateinit var printAllEpisodeStatus: PrintAllEpisodeStatus
 
@@ -27,11 +26,11 @@ class PrintAllEpisodesCommandTest {
 
     @Test
     fun `should call the use case correctly`() {
-        val credentials = SatoriReaderCredentials(username = "username", password = "password")
+        val credentials = LoginApplicationCredentials(username = "username", password = "password")
 
         every { printAllEpisodeStatus.print(any()) } returns "the-output"
         val result = printAllEpisodesCommand
-            .context { obj = SatoriReaderCliContext(credentials = credentials) }
+            .context { obj = ApplicationCliContext(credentials = credentials) }
             .test()
 
         assertEquals("the-output\n", result.output)

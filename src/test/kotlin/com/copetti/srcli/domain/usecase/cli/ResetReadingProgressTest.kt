@@ -19,12 +19,15 @@ class ResetReadingProgressTest {
     @MockK
     private lateinit var satoriReaderProvider: SatoriReaderProvider
 
+    @MockK
+    private lateinit var authenticateUser: AuthenticateUser
+
     @InjectMockKs
     private lateinit var resetReadingProgress: ResetReadingProgress
 
     @Test
     fun `should reset the progress for all episodes, series and editions`() = runTest {
-        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+        val credentials = LoginApplicationCredentials(username = "the-username", password = "the-password")
         val token = SatoriReaderLoginToken(sessionToken = "token")
 
         val firstEpisodeAEdition =
@@ -79,7 +82,7 @@ class ResetReadingProgressTest {
             )
         } returns seriesB
 
-        coEvery { satoriReaderProvider.login(credentials) } returns token
+        coEvery { authenticateUser.authenticate(any()) } returns token
         coEvery { satoriReaderProvider.resetReadingProgress(any()) } returns Unit
 
         resetReadingProgress.reset(ResetReadingProgressRequest(credentials = credentials))
@@ -105,11 +108,11 @@ class ResetReadingProgressTest {
             numberOfEditionsPerEpisode = 30,
             delayMs = 1
         )
-        val resetReadingProgress = ResetReadingProgress(delayedSatoriReaderProvider)
+        val authenticateUser = AuthenticateUser(delayedSatoriReaderProvider)
+        val resetReadingProgress = ResetReadingProgress(authenticateUser, delayedSatoriReaderProvider)
 
-        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+        val credentials = LoginApplicationCredentials(username = "the-username", password = "the-password")
 
         resetReadingProgress.reset(ResetReadingProgressRequest(credentials = credentials))
     }
-
 }

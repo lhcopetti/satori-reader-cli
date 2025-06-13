@@ -11,7 +11,7 @@ class RateLimitedSatoriReaderProvider : SatoriReaderProvider {
     private val rateLimitingBuffer: MutableList<Long> = mutableListOf()
     private val counter = AtomicInteger()
 
-    override suspend fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken {
+    override suspend fun login(request: LoginApplicationCredentials): SatoriReaderLoginToken {
         return SatoriReaderLoginToken(sessionToken = "")
     }
 
@@ -30,7 +30,6 @@ class RateLimitedSatoriReaderProvider : SatoriReaderProvider {
         return createMockContent(episodeCount = 10, editionCountPerEpisode = 3)
     }
 
-
     override suspend fun resetReadingProgress(request: ResetEditionReadingProgressRequest) {
         println("RESET_READING_PROGRESS")
         increment()
@@ -46,7 +45,6 @@ class RateLimitedSatoriReaderProvider : SatoriReaderProvider {
     private fun decrement() {
         counter.decrementAndGet()
     }
-
 
     @Synchronized
     private fun verifyRateLimiting() {
@@ -85,6 +83,4 @@ class RateLimitedSatoriReaderProvider : SatoriReaderProvider {
     companion object {
         private const val MAX_REQUESTS_PER_SECOND = 100
     }
-
-
 }

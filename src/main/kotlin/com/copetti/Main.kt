@@ -4,7 +4,10 @@ import com.copetti.srcli.cli.PrintAllEpisodesCommand
 import com.copetti.srcli.cli.ResetReadingProgressCommand
 import com.copetti.srcli.cli.SatoriReaderCliCommand
 import com.copetti.srcli.cli.UpdateReadmeProgressCommand
-import com.copetti.srcli.domain.usecase.*
+import com.copetti.srcli.domain.usecase.FetchAllSatoriReaderContent
+import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
+import com.copetti.srcli.domain.usecase.SelectPrimaryEdition
+import com.copetti.srcli.domain.usecase.cli.AuthenticateUser
 import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodeStatus
 import com.copetti.srcli.domain.usecase.cli.ResetReadingProgress
 import com.copetti.srcli.domain.usecase.cli.UpdateReadmeProgress
@@ -20,9 +23,10 @@ fun main(args: Array<String>) {
     val fetchAllSatoriReaderContent = FetchAllSatoriReaderContent(satoriReaderProvider)
     val selectPrimaryEdition = SelectPrimaryEdition()
     val retrieveAllSatoriReaderSeries = RetrieveAllSatoriReaderSeries(fetchAllSatoriReaderContent, selectPrimaryEdition)
-    val resetReadingProgress = ResetReadingProgress(satoriReaderProvider)
-    val printAllEpisodeStatus = PrintAllEpisodeStatus(satoriReaderProvider, retrieveAllSatoriReaderSeries)
-    val retrieveReadingProgress = RetrieveReadingProgress(satoriReaderProvider, retrieveAllSatoriReaderSeries)
+    val authenticateUser = AuthenticateUser(satoriReaderProvider)
+    val resetReadingProgress = ResetReadingProgress(authenticateUser, satoriReaderProvider)
+    val printAllEpisodeStatus = PrintAllEpisodeStatus(authenticateUser, retrieveAllSatoriReaderSeries)
+    val retrieveReadingProgress = RetrieveReadingProgress(authenticateUser, retrieveAllSatoriReaderSeries)
     val progressionCellBuilder = ProgressionCellBuilder()
     val generateProgressDashboard = GenerateProgressDashboard(
         retrieveReadingProgress = retrieveReadingProgress,

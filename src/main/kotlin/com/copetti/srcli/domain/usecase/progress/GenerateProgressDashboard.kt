@@ -1,9 +1,9 @@
 package com.copetti.srcli.domain.usecase.progress
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.ApplicationCredentials
 
 data class GenerateProgressDashboardRequest(
-    val credentials: SatoriReaderCredentials
+    val credentials: ApplicationCredentials
 )
 
 class GenerateProgressDashboard(

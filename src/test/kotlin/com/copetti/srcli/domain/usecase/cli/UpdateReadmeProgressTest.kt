@@ -1,6 +1,6 @@
 package com.copetti.srcli.domain.usecase.cli
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.LoginApplicationCredentials
 import com.copetti.srcli.domain.usecase.file.FileSystem
 import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboard
 import com.copetti.srcli.domain.usecase.progress.GenerateProgressDashboardRequest
@@ -29,7 +29,7 @@ class UpdateReadmeProgressTest {
 
     @Test
     fun `should generate dashboard and save the new readme files`() {
-        val credentials = SatoriReaderCredentials(username = "the-username", password = "the-password")
+        val credentials = LoginApplicationCredentials(username = "the-username", password = "the-password")
         val templateContent = "- {{PROGRESSION_DASHBOARD}} - {{TODAY}} - template-content"
 
         every { fileSystem.readFile(any()) } returns templateContent

@@ -1,13 +1,14 @@
 package com.copetti.srcli.cli
 
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.ApplicationCredentials
+import com.copetti.srcli.domain.model.LoginApplicationCredentials
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.prompt
 import com.github.ajalt.clikt.parameters.options.required
 
-data class SatoriReaderCliContext(
-    val credentials: SatoriReaderCredentials
+data class ApplicationCliContext(
+    val credentials: ApplicationCredentials
 )
 
 class SatoriReaderCliCommand : CliktCommand() {
@@ -17,8 +18,8 @@ class SatoriReaderCliCommand : CliktCommand() {
 
     override fun run() {
         currentContext.findOrSetObject {
-            SatoriReaderCliContext(
-                credentials = SatoriReaderCredentials(
+            ApplicationCliContext(
+                credentials = LoginApplicationCredentials(
                     username = username,
                     password = password
                 )

@@ -5,7 +5,7 @@ import com.copetti.srcli.domain.model.*
 
 interface SatoriReaderProvider {
 
-    suspend fun login(request: SatoriReaderCredentials): SatoriReaderLoginToken
+    suspend fun login(request: LoginApplicationCredentials): SatoriReaderLoginToken
 
     suspend fun fetchSeries(): List<SatoriReaderSeriesReference>
 

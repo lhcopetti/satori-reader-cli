@@ -27,7 +27,6 @@ class ThrottledSatoriReaderProviderTest {
 
     @Test
     fun `should throttle all remote calls to the provider`() = runTest {
-
         val token = SatoriReaderLoginToken("")
         coEvery { satoriReaderProvider.login(any()) } returns token
         coEvery { satoriReaderProvider.fetchSeries() } returns listOf()
@@ -35,7 +34,7 @@ class ThrottledSatoriReaderProviderTest {
         coEvery { satoriReaderProvider.resetReadingProgress(any()) } returns Unit
 
         val result = measureTimeMillis {
-            throttledSatoriReaderProvider.login(SatoriReaderCredentials("", ""))
+            throttledSatoriReaderProvider.login(LoginApplicationCredentials("", ""))
             throttledSatoriReaderProvider.fetchSeries()
 
             for (i in 1..10) {
@@ -47,9 +46,7 @@ class ThrottledSatoriReaderProviderTest {
                 val edition = SatoriReaderEdition("", "", "", SatoriReaderStatus.COMPLETED)
                 throttledSatoriReaderProvider.resetReadingProgress(ResetEditionReadingProgressRequest(token, edition))
             }
-
         }
         assertTrue(message = "Should be at least 1 second with a min delay of 20ms") { result > 1_000 }
-
     }
 }

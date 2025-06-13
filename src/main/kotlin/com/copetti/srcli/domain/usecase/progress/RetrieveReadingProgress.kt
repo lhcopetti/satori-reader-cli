@@ -1,10 +1,10 @@
 package com.copetti.srcli.domain.usecase.progress
 
-import com.copetti.srcli.domain.gateway.SatoriReaderProvider
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.ApplicationCredentials
 import com.copetti.srcli.domain.model.SatoriReaderStatus
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
+import com.copetti.srcli.domain.usecase.cli.AuthenticateUser
 import kotlinx.coroutines.runBlocking
 
 data class SeriesProgression(
@@ -20,17 +20,17 @@ data class EpisodeProgression(
 )
 
 data class RetrieveReadingProgressRequest(
-    val credentials: SatoriReaderCredentials
+    val credentials: ApplicationCredentials
 )
 
 class RetrieveReadingProgress(
-    private val satoriReaderProvider: SatoriReaderProvider,
+    private val authenticateUser: AuthenticateUser,
     private val retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries
 ) {
 
     fun retrieve(request: RetrieveReadingProgressRequest): List<SeriesProgression> {
         return runBlocking {
-            val token = satoriReaderProvider.login(request.credentials)
+            val token = authenticateUser.authenticate(request.credentials)
             val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
             val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
             allSeries.map { series ->

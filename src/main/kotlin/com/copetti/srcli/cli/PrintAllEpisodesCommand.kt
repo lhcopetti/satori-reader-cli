@@ -1,7 +1,7 @@
 package com.copetti.srcli.cli
 
-import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodesRequest
 import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodeStatus
+import com.copetti.srcli.domain.usecase.cli.PrintAllEpisodesRequest
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
 
@@ -9,7 +9,7 @@ class PrintAllEpisodesCommand(
     private val printAllEpisodeStatus: PrintAllEpisodeStatus,
 ) : CliktCommand() {
 
-    private val config by requireObject<SatoriReaderCliContext>()
+    private val config by requireObject<ApplicationCliContext>()
 
     override fun run() {
         val request = PrintAllEpisodesRequest(credentials = config.credentials)

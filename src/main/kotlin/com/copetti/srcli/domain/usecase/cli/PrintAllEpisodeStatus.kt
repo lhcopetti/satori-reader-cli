@@ -1,7 +1,6 @@
 package com.copetti.srcli.domain.usecase.cli
 
-import com.copetti.srcli.domain.gateway.SatoriReaderProvider
-import com.copetti.srcli.domain.model.SatoriReaderCredentials
+import com.copetti.srcli.domain.model.ApplicationCredentials
 import com.copetti.srcli.domain.model.SatoriReaderSeries
 import com.copetti.srcli.domain.model.SatoriReaderStatus
 import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeries
@@ -9,7 +8,7 @@ import com.copetti.srcli.domain.usecase.RetrieveAllSatoriReaderSeriesRequest
 import kotlinx.coroutines.runBlocking
 
 data class PrintAllEpisodesRequest(
-    val credentials: SatoriReaderCredentials
+    val credentials: ApplicationCredentials
 )
 
 data class EpisodeStatus(
@@ -21,13 +20,13 @@ data class EpisodeStatus(
 
 
 class PrintAllEpisodeStatus(
-    private val satoriReaderProvider: SatoriReaderProvider,
+    private val authenticateUser: AuthenticateUser,
     private val retrieveAllSatoriReaderSeries: RetrieveAllSatoriReaderSeries,
 ) {
 
     fun print(request: PrintAllEpisodesRequest): String {
         return runBlocking {
-            val token = satoriReaderProvider.login(request.credentials)
+            val token = authenticateUser.authenticate(request.credentials)
             val providerRequest = RetrieveAllSatoriReaderSeriesRequest(token = token)
             val allSeries = retrieveAllSatoriReaderSeries.retrieve(providerRequest)
             retrieveAllEpisodesStatus(allSeries).joinToString(separator = System.lineSeparator()) { episode ->
