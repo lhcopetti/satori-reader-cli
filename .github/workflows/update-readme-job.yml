@@ -34,6 +34,7 @@ jobs:
         env:
           USERNAME: ${{ secrets.SATORI_READER_LOGIN }}
           PASSWORD: ${{ secrets.SATORI_READER_PASSWORD }}
+          TOKEN: ${{ secrets.SATORI_READER_TOKEN }}
         run: java -jar target/*.jar --auth token --token "$TOKEN" update-readme-progress
 
       - name: Commit and Push Changes
